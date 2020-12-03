@@ -7,4 +7,6 @@
     <!--    <import resource="spring-security.xml"/>-->
 
     <!--    <context:component-scan base-package="ru.alexandrfunduk.vote.**.service"/>-->
+
+
 </beans>
