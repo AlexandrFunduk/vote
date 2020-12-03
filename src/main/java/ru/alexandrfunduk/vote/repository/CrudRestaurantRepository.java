@@ -11,6 +11,6 @@ import ru.alexandrfunduk.vote.model.Restaurant;
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Transactional
     @Modifying
-    @Query("DELETE FROM Restaurant u WHERE u.id=:id")
+    @Query("DELETE FROM Restaurant restaurant WHERE restaurant.id=:id")
     int delete(@Param("id") int id);
 }

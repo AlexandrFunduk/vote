@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrfunduk.vote.model.Menu;
 import ru.alexandrfunduk.vote.model.Restaurant;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -32,5 +33,17 @@ public class MenuRepository {
 
     public List<Menu> getAll() {
         return crudRepository.findAll(SORT_DATE);
+    }
+
+    public List<Menu> getByRestaurant(Restaurant restaurant) {
+        return crudRepository.getMenusByRestaurant(restaurant);
+    }
+
+    public List<Menu> getByDay(LocalDate date) {
+        return crudRepository.getMenusByDay(date);
+    }
+
+    public Menu getByDayAndRestaurant(Restaurant restaurant, LocalDate date) {
+        return crudRepository.getDayMenuByRestaurant(restaurant, date);
     }
 }
