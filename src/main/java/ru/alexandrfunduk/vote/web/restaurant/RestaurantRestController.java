@@ -34,7 +34,7 @@ public class RestaurantRestController {
     }
 
     @GetMapping("/{id}")
-    public Restaurant get(int id) {
+    public Restaurant get(@PathVariable int id) {
         log.info("get {}", id);
         return checkNotFoundWithId(repository.get(id), id);
     }

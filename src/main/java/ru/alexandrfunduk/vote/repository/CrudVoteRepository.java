@@ -23,6 +23,6 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     List<Vote> getVotesByDateTime(LocalDateTime dateTime);
 
     @Modifying
-    @Query("SELECT Vote FROM Vote vote WHERE vote.dateTime=:dateTime and vote.user=:user")
+    @Query("SELECT vote FROM Vote vote WHERE vote.dateTime=:dateTime and vote.user=:user")
     Vote getDayVotesByUser(@Param("user") User user, @Param("dateTime") LocalDateTime dateTime);
 }

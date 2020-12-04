@@ -35,7 +35,7 @@ public class VoteRestController {
     }
 
     @GetMapping("/{id}")
-    public Vote get(int id) {
+    public Vote get(@PathVariable int id) {
         log.info("get {}", id);
         return checkNotFoundWithId(repository.get(id), id);
     }

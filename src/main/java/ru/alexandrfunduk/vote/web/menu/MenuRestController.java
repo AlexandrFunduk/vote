@@ -33,7 +33,7 @@ public class MenuRestController {
     }
 
     @GetMapping("/{id}")
-    public Menu get(int id) {
+    public Menu get(@PathVariable int id) {
         log.info("get {}", id);
         return checkNotFoundWithId(repository.get(id), id);
     }

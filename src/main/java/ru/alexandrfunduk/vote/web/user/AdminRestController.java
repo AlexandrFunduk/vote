@@ -24,7 +24,7 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @GetMapping("/{id}")
-    public User get(int id) {
+    public User get(@PathVariable int id) {
         return super.get(id);
     }
 
