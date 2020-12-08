@@ -3,7 +3,6 @@ package ru.alexandrfunduk.vote.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import ru.alexandrfunduk.vote.model.Menu;
-import ru.alexandrfunduk.vote.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,15 +34,23 @@ public class MenuRepository {
         return crudRepository.findAll(SORT_DATE);
     }
 
-    public List<Menu> getByRestaurant(Restaurant restaurant) {
-        return crudRepository.getMenusByRestaurant(restaurant);
+    public List<Menu> getByRestaurant(int restaurant_id) {
+        return crudRepository.getMenusByRestaurant(restaurant_id);
     }
 
     public List<Menu> getByDay(LocalDate date) {
         return crudRepository.getMenusByDay(date);
     }
 
-    public Menu getByDayAndRestaurant(Restaurant restaurant, LocalDate date) {
-        return crudRepository.getDayMenuByRestaurant(restaurant, date);
+    public Menu getByDayAndRestaurant(Integer restaurantId, LocalDate date) {
+        return crudRepository.getDayMenuByRestaurant(restaurantId, date);
+    }
+
+    public List<Menu> getBetween(LocalDate startDate, LocalDate endDate) {
+        return crudRepository.getBetween(startDate, endDate);
+    }
+
+    public List<Menu> getBetweenByRestaurant(LocalDate startDate, LocalDate endDate, int restaurantId) {
+        return crudRepository.getBetweenByRestaurant(startDate, endDate, restaurantId);
     }
 }
