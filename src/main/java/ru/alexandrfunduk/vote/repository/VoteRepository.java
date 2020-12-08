@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public class VoteRepository {
-    private static final Sort SORT_DATE = Sort.by(Sort.Direction.DESC, "day");
+    private static final Sort SORT_DATE = Sort.by(Sort.Direction.DESC, "dateTime");
 
     private final CrudVoteRepository crudRepository;
 

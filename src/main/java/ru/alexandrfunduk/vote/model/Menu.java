@@ -17,7 +17,7 @@ public class Menu extends AbstractBaseEntity {
     @NotNull
     private Restaurant restaurant;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "dish_prise")
     @MapKeyColumn(name = "dish")
     @Column(name = "prise")
