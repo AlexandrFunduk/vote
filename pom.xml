@@ -13,10 +13,13 @@
         <java.version>15</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <spring.version>5.3.0</spring.version>
+        <spring.security.version>5.4.1</spring.security.version>
         <spring-data-jpa.version>2.4.0</spring-data-jpa.version>
         <jackson-json.version>2.11.3</jackson-json.version>
         <tomcat.version>9.0.39</tomcat.version>
+
         <!-- Logging -->
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -30,6 +33,9 @@
         <hibernate.version>5.4.22.Final</hibernate.version>
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <javax-el.version>3.0.1-b12</javax-el.version>
+
+        <!--Cache-->
+        <ehcache.version>3.9.0</ehcache.version>
     </properties>
 
     <build>
@@ -89,6 +95,18 @@
             <version>${spring-data-jpa.version}</version>
         </dependency>
 
+        <!--security-->
+        <!--<dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>-->
+
         <!--- ORM -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -112,6 +130,26 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Cache -->
+        <!--<dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <scope>runtime</scope>
+            <version>${ehcache.version}</version>
+        </dependency>
+
+        &lt;!&ndash;https://medium.com/criciumadev/its-time-migrating-to-java-11-5eb3868354f9&ndash;&gt;
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.4.0-b180830.0438</version>
+        </dependency>
+-->
         <!-- Web-->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
