@@ -30,9 +30,8 @@ public abstract class AbstractMenuRestController {
         return checkNotFoundWithId(repository.get(id), id);
     }
 
-    public List<Menu> getByRestaurantId(int restaurantId) {
-        log.info("getByRestaurantID {}", restaurantId);
-        return repository.getByRestaurant(restaurantId);
+    public List<Menu> getByToday() {
+        return repository.getByDay(LocalDate.now());
     }
 
     public List<Menu> getFiltered(@Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable Integer restaurantId) {

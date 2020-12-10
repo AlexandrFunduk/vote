@@ -26,11 +26,10 @@ public class MenuRestController extends AbstractMenuRestController{
         return super.get(id);
     }
 
-    /*@Override
-    @GetMapping(value = "/restaurants/{id}")
-    public List<Menu> getByRestaurantId(@PathVariable int id) {
-        return super.getByRestaurantId(id);
-    }*/
+    @GetMapping("/today")
+    public List<Menu> getByDay() {
+        return super.getByToday();
+    }
 
     @Override
     @GetMapping("/filter")
