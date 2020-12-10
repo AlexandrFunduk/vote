@@ -4,22 +4,29 @@ import org.springframework.stereotype.Repository;
 import ru.alexandrfunduk.vote.model.Vote;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public class VoteRepository {
     private final CrudVoteRepository crudRepository;
     private final CrudUserRepository crudUserRepository;
+    private final CrudRestaurantRepository crudRestaurantRepository;
 
-    public VoteRepository(CrudVoteRepository crudRepository, CrudUserRepository crudUserRepository) {
+    public VoteRepository(CrudVoteRepository crudRepository, CrudUserRepository crudUserRepository, CrudRestaurantRepository crudRestaurantRepository) {
         this.crudRepository = crudRepository;
         this.crudUserRepository = crudUserRepository;
+        this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
-    public Vote save(Vote vote, int userId) {
-        if (!vote.isNew() && get(vote.getId(), userId) == null) {
+    public Vote save(Vote vote, int userId, int restaurantId) {
+        LocalDateTime dateTime = LocalDateTime.now();
+        if (!vote.isNew() && (get(vote.getId(), userId) == null || !dateTime.toLocalTime().isAfter(LocalTime.of(11, 0, 0)))) {
             return null;
         }
+        vote.setDateTime(dateTime);
+        vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
         vote.setUser(crudUserRepository.getOne(userId));
         return crudRepository.save(vote);
     }

@@ -18,10 +18,9 @@ import ru.alexandrfunduk.vote.web.SecurityUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
-import static ru.alexandrfunduk.vote.util.ValidationUtil.*;
+import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
 @RequestMapping(value = ProfileVoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -51,13 +50,11 @@ public class ProfileVoteRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> create(@RequestBody Integer restaurant, @RequestBody Vote vote) {
-
+    public ResponseEntity<Vote> create(@RequestBody int restaurantId) {
         int userId = SecurityUtil.authUserId();
-        checkNew(vote);
-        log.info("create {} for user {}", vote, userId);
-        Assert.notNull(vote, "vote must not be null");
-        Vote created = repository.save(vote, userId);
+        Vote created = repository.save(new Vote(), userId, restaurantId);
+        Assert.notNull(created, "vote can not be created");
+        log.info("create {} for user {}", created, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -73,14 +70,13 @@ public class ProfileVoteRestController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Vote vote, @PathVariable int id) {
-        if (LocalTime.now().isAfter(LocalTime.of(11, 0, 0))) {
-            assureIdConsistent(vote, id);
-            Assert.notNull(vote, "user must not be null");
-            int userId = SecurityUtil.authUserId();
-            log.info("update {} for user {}", vote, userId);
-            checkNotFoundWithId(repository.save(vote, userId), vote.id());
-        }
+    public void update(@RequestBody int restaurantId, @PathVariable int id) {
+        Vote vote = new Vote();
+        vote.setId(id);
+        int userId = SecurityUtil.authUserId();
+        log.info("update {} for user {}", vote, userId);
+        checkNotFoundWithId(repository.save(vote, userId, restaurantId), vote.id());
+
     }
 
     @GetMapping("/filter")
