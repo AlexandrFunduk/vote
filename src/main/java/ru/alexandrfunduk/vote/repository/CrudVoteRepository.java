@@ -18,12 +18,10 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     int delete(@Param("id") int id, @Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.user.id=:user_id")
-    List<Vote> getVotesByUser(@Param("user_id") int userId);
-
-    List<Vote> getVotesByDateTime(LocalDateTime dateTime);
+    @Query("SELECT vote FROM Vote vote WHERE vote.user.id=:user_id ORDER BY vote.dateTime desc")
+    List<Vote> getAll(@Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.dateTime=:dateTime and vote.user.id=:user_id")
-    Vote getDayVotesByUser(@Param("user_id") int userId, @Param("dateTime") LocalDateTime dateTime);
+    @Query("SELECT vote FROM Vote vote WHERE vote.dateTime>=:startTime and vote.dateTime<:endDate and vote.user.id=:user_id  ORDER BY vote.dateTime desc")
+    List<Vote> getBetween(@Param("user_id") int userId, @Param("startTime") LocalDateTime startTime, @Param("endDate") LocalDateTime endDate);
 }
