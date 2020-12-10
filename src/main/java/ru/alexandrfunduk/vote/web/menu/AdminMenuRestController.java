@@ -17,8 +17,8 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Menu menu, @PathVariable int id) {
-        super.update(menu, id);
+    public void update(@RequestBody Menu menu, @PathVariable int id, @RequestBody int restaurantId) {
+        super.update(menu, id, restaurantId);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu) {
-        Menu created = super.create(menu);
+    public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu, @RequestBody Integer restaurantId) {
+        Menu created = super.create(menu, restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

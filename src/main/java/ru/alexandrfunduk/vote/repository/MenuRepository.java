@@ -13,12 +13,18 @@ public class MenuRepository {
     private static final Sort SORT_DATE = Sort.by(Sort.Direction.DESC, "day");
 
     private final CrudMenuRepository crudRepository;
+    private final CrudRestaurantRepository crudRestaurantRepository;
 
-    public MenuRepository(CrudMenuRepository crudRepository) {
+    public MenuRepository(CrudMenuRepository crudRepository, CrudRestaurantRepository crudRestaurantRepository) {
         this.crudRepository = crudRepository;
+        this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
-    public Menu save(Menu menu) {
+    public Menu save(Menu menu, int restaurantId) {
+        if (!menu.isNew() && get(menu.getId()) == null) {
+            return null;
+        }
+        menu.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
         return crudRepository.save(menu);
     }
 

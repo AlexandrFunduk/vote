@@ -41,11 +41,11 @@ public abstract class AbstractMenuRestController {
                 : repository.getBetweenByRestaurant(DateTimeUtil.atStartOfDayOrMin(startDate), DateTimeUtil.atStartOfNextDayOrMax(endDate), restaurantId);
     }
 
-    public Menu create(Menu menu) {
-        log.info("create {}", menu);
-        Assert.notNull(menu, "user must not be null");
+    public Menu create(Menu menu, Integer restaurantId) {
+        Assert.notNull(menu, "menu must not be null");
         checkNew(menu);
-        return repository.save(menu);
+        log.info("create {}", menu);
+        return repository.save(menu, restaurantId);
     }
 
     public void delete(int id) {
@@ -53,10 +53,10 @@ public abstract class AbstractMenuRestController {
         checkNotFoundWithId(repository.delete(id), id);
     }
 
-    public void update(Menu menu, int id) {
+    public void update(Menu menu, int id, int restaurantId) {
         log.info("update {} with id={}", menu, id);
+        Assert.notNull(menu, "menu must not be null");
         assureIdConsistent(menu, id);
-        Assert.notNull(menu, "user must not be null");
-        checkNotFoundWithId(repository.save(menu), menu.id());
+        checkNotFoundWithId(repository.save(menu, restaurantId), id);
     }
 }
