@@ -1,5 +1,8 @@
 package ru.alexandrfunduk.vote.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import ru.alexandrfunduk.vote.util.DateTimeUtil;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -7,9 +10,11 @@ import java.time.LocalDate;
 import java.util.Map;
 
 @Entity
+@Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "day"}, name = "restaurant_id_day_idx")})
 public class Menu extends AbstractBaseEntity {
     @Column
     @NotBlank
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
     private LocalDate day;
 
     @ManyToOne(fetch = FetchType.EAGER)
