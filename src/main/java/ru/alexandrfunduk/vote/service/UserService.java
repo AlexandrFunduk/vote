@@ -2,9 +2,14 @@ package ru.alexandrfunduk.vote.service;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import ru.alexandrfunduk.vote.AuthorizedUser;
+import ru.alexandrfunduk.vote.model.AbstractBaseEntity;
 import ru.alexandrfunduk.vote.model.User;
 import ru.alexandrfunduk.vote.repository.UserRepository;
 import ru.alexandrfunduk.vote.to.UserTo;
@@ -12,22 +17,24 @@ import ru.alexandrfunduk.vote.util.UserUtil;
 
 import java.util.List;
 
+import static ru.alexandrfunduk.vote.util.UserUtil.prepareToSave;
 import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFound;
 import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
 
 @Service("userService")
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class UserService /*implements UserDetailsService*/ {
-
+public class UserService implements UserDetailsService {
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User create(User user) {
         Assert.notNull(user, "user must not be null");
-        return repository.save(user);
+        return prepareAndSave(user);
     }
 
     public void delete(int id) {
@@ -47,14 +54,16 @@ public class UserService /*implements UserDetailsService*/ {
         return repository.getAll();
     }
 
+    @Transactional
     public void update(User user) {
-        repository.save(user);
+        Assert.notNull(user, "user must not be null");
+        prepareAndSave(user);
     }
 
     @Transactional
     public void update(UserTo userTo) {
         User user = get(userTo.id());
-        User updatedUser = UserUtil.updateFromTo(user, userTo);
+        prepareAndSave(UserUtil.updateFromTo(user, userTo));
     }
 
     @Transactional
@@ -62,14 +71,16 @@ public class UserService /*implements UserDetailsService*/ {
         User user = get(id);
         user.setEnabled(enabled);
     }
-
-   /* @Override
+    @Override
     public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = repository.getByEmail(email.toLowerCase());
         if (user == null) {
             throw new UsernameNotFoundException("User " + email + " is not found");
         }
         return new AuthorizedUser(user);
-    }*/
+    }
 
+    private User prepareAndSave(User user) {
+        return repository.save(prepareToSave(user, passwordEncoder));
+    }
 }

@@ -31,4 +31,8 @@ public class RestaurantRepository {
     public List<Restaurant> getAll() {
         return crudRepository.findAll(SORT_NAME);
     }
+
+    public Restaurant getByName(String name) {
+        return crudRepository.getRestaurantByName(name);
+    }
 }

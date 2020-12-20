@@ -1,5 +1,7 @@
 package ru.alexandrfunduk.vote.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
@@ -18,10 +20,10 @@ public abstract class AbstractNamedRegisteredEntity extends AbstractBaseEntity {
 
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
-    protected AbstractNamedRegisteredEntity() {
-    }
+    protected AbstractNamedRegisteredEntity() {}
 
     protected AbstractNamedRegisteredEntity(Integer id, String name) {
         super(id);

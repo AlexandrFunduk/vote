@@ -1,12 +1,36 @@
 package ru.alexandrfunduk.vote.util;
 
 
+import org.slf4j.Logger;
 import ru.alexandrfunduk.vote.HasId;
-import ru.alexandrfunduk.vote.model.AbstractBaseEntity;
+import ru.alexandrfunduk.vote.util.exception.ErrorType;
+import ru.alexandrfunduk.vote.util.exception.IllegalRequestDataException;
 import ru.alexandrfunduk.vote.util.exception.NotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.*;
+import java.util.Set;
+
 public class ValidationUtil {
+
+    private static final Validator validator;
+
+    static {
+        //  From Javadoc: implementations are thread-safe and instances are typically cached and reused.
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        //  From Javadoc: implementations of this interface must be thread-safe
+        validator = factory.getValidator();
+    }
+
     private ValidationUtil() {
+    }
+
+    public static <T> void validate(T bean) {
+        // https://alexkosarev.name/2018/07/30/bean-validation-api/
+        Set<ConstraintViolation<T>> violations = validator.validate(bean);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
@@ -29,9 +53,9 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkNew(AbstractBaseEntity entity) {
-        if (!entity.isNew()) {
-            throw new IllegalArgumentException(entity + " must be new (id=null)");
+    public static void checkNew(HasId bean) {
+        if (!bean.isNew()) {
+            throw new IllegalRequestDataException(bean + " must be new (id=null)");
         }
     }
 
@@ -40,7 +64,32 @@ public class ValidationUtil {
         if (bean.isNew()) {
             bean.setId(id);
         } else if (bean.id() != id) {
-            throw new IllegalArgumentException(bean + " must be with id=" + id);
+            throw new IllegalRequestDataException(bean + " must be with id=" + id);
         }
+    }
+
+    //  http://stackoverflow.com/a/28565320/548473
+    public static Throwable getRootCause(Throwable t) {
+        Throwable result = t;
+        Throwable cause;
+
+        while (null != (cause = result.getCause()) && (result != cause)) {
+            result = cause;
+        }
+        return result;
+    }
+
+    public static String getMessage(Throwable e) {
+        return e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName();
+    }
+
+    public static Throwable logAndGetRootCause(Logger log, HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType) {
+        Throwable rootCause = ValidationUtil.getRootCause(e);
+        if (logStackTrace) {
+            log.error(errorType + " at request " + req.getRequestURL(), rootCause);
+        } else {
+            log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
+        }
+        return rootCause;
     }
 }

@@ -1,12 +1,15 @@
 package ru.alexandrfunduk.vote.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.util.CollectionUtils;
+import ru.alexandrfunduk.vote.HasIdAndEmail;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
@@ -15,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
-public class User extends AbstractNamedRegisteredEntity {
+public class User extends AbstractNamedRegisteredEntity implements HasIdAndEmail {
 
     public static final String DELETE = "User.delete";
     public static final String BY_EMAIL = "User.getByEmail";
@@ -35,6 +38,8 @@ public class User extends AbstractNamedRegisteredEntity {
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
+
+
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique_idx")})
@@ -44,6 +49,7 @@ public class User extends AbstractNamedRegisteredEntity {
     private Set<Role> roles;
 
     public User() {
+        super();
     }
 
     public User(User u) {
@@ -93,6 +99,8 @@ public class User extends AbstractNamedRegisteredEntity {
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
+
+
 
     @Override
     public String toString() {

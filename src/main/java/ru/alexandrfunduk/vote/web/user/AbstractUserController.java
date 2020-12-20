@@ -3,6 +3,14 @@ package ru.alexandrfunduk.vote.web.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.BindException;
+import org.springframework.validation.DataBinder;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import ru.alexandrfunduk.vote.HasId;
+import ru.alexandrfunduk.vote.View;
 import ru.alexandrfunduk.vote.model.User;
 import ru.alexandrfunduk.vote.service.UserService;
 import ru.alexandrfunduk.vote.to.UserTo;
@@ -18,7 +26,19 @@ public abstract class AbstractUserController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private UserService service;
+    protected UserService service;
+
+    @Autowired
+    private UniqueMailValidator emailValidator;
+
+    @Autowired
+    @Qualifier("defaultValidator")
+    private Validator validator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(emailValidator);
+    }
 
     public List<User> getAll() {
         log.info("getAll");
@@ -30,9 +50,9 @@ public abstract class AbstractUserController {
         return service.get(id);
     }
 
-    public void create(UserTo userTo) {
+    public User create(UserTo userTo) {
         log.info("create from to {}", userTo);
-        create(UserUtil.createNewFromTo(userTo));
+        return create(UserUtil.createNewFromTo(userTo));
     }
 
     public User create(User user) {
@@ -46,15 +66,8 @@ public abstract class AbstractUserController {
         service.delete(id);
     }
 
-    public void update(User user, int id) {
-        log.info("update {} with id={}", user, id);
-        assureIdConsistent(user, id);
-        service.update(user);
-    }
-
     public void update(UserTo userTo, int id) {
         log.info("update {} with id={}", userTo, id);
-        assureIdConsistent(userTo, id);
         service.update(userTo);
     }
 
@@ -66,5 +79,15 @@ public abstract class AbstractUserController {
     public void enable(int id, boolean enabled) {
         log.info(enabled ? "enable {}" : "disable {}", id);
         service.enable(id, enabled);
+    }
+
+    protected void validateBeforeUpdate(HasId user, int id) throws BindException {
+        assureIdConsistent(user, id);
+        DataBinder binder = new DataBinder(user);
+        binder.addValidators(emailValidator, validator);
+        binder.validate(View.Web.class);
+        if (binder.getBindingResult().hasErrors()) {
+            throw new BindException(binder.getBindingResult());
+        }
     }
 }

@@ -10,7 +10,7 @@ import ru.alexandrfunduk.vote.model.Menu;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminMenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminMenuRestController extends AbstractMenuRestController {
     static final String REST_URL = "/rest/admin/menu";
 
