@@ -1,6 +1,10 @@
 package ru.alexandrfunduk.vote.model;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.alexandrfunduk.vote.View;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import javax.persistence.*;
@@ -18,14 +22,16 @@ public class Menu extends AbstractBaseEntity {
     private LocalDate day;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id")
-    @NotNull
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "dish_prise")
     @MapKeyColumn(name = "dish")
     @Column(name = "prise")
+    @BatchSize(size = 200)
     private Map<String, Integer> dish_prise;
 
     public Menu(LocalDate day, Restaurant restaurant, Map<String, Integer> dish_prise) {

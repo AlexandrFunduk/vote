@@ -35,6 +35,8 @@ public class ExceptionInfoHandler {
 
     private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
+            "vote_unique_user_date_time_idx", EXCEPTION_DUPLICATE_VOTE_TODAY,
+            "menu_unique_day_restaurant_name_idx", EXCEPTION_DUPLICATE_MENU_TODAY,
             "restaurant_unique_name_idx", EXCEPTION_DUPLICATE_RESTAURANT);
 
     @ExceptionHandler(NotFoundException.class)
