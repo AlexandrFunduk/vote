@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.alexandrfunduk.vote.AuthorizedUser;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.repository.VoteRepository;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
-import ru.alexandrfunduk.vote.web.SecurityUtil;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -34,24 +35,24 @@ public class ProfileVoteRestController {
 
 
     @GetMapping
-    public List<Vote> getAll() {
+    public List<Vote> getAll(@AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("getAll");
-        return repository.getAll(SecurityUtil.authUserId());
+        return repository.getAll(authUser.getId());
     }
 
     @GetMapping("/{id}")
-    public Vote get(@PathVariable int id) {
-        return checkNotFoundWithId(repository.get(id, SecurityUtil.authUserId()), id);
+    public Vote get(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
+        return checkNotFoundWithId(repository.get(id, authUser.getId()), id);
     }
 
     @GetMapping("/today")
-    public Vote get() {
-        return repository.getByDay(SecurityUtil.authUserId(), LocalDate.now());
+    public Vote get(@AuthenticationPrincipal AuthorizedUser authUser) {
+        return repository.getByDay(authUser.getId(), LocalDate.now());
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> create(@RequestBody int restaurantId) {
-        int userId = SecurityUtil.authUserId();
+    public ResponseEntity<Vote> create(@RequestBody int restaurantId, @AuthenticationPrincipal AuthorizedUser authUser) {
+        int userId = authUser.getId();
         Vote created = repository.save(new Vote(), userId, restaurantId);
         Assert.notNull(created, "vote can not be created");
         log.info("create {} for user {}", created, userId);
@@ -63,20 +64,19 @@ public class ProfileVoteRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         log.info("delete {}", id);
-        checkNotFoundWithId(repository.delete(id, SecurityUtil.authUserId()), id);
+        checkNotFoundWithId(repository.delete(id, authUser.getId()), id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody int restaurantId, @PathVariable int id) {
+    public void update(@RequestBody int restaurantId, @PathVariable int id, @AuthenticationPrincipal AuthorizedUser authUser) {
         Vote vote = new Vote();
         vote.setId(id);
-        int userId = SecurityUtil.authUserId();
+        int userId = authUser.getId();
         log.info("update {} for user {}", vote, userId);
         checkNotFoundWithId(repository.save(vote, userId, restaurantId), vote.id());
-
     }
 
     @GetMapping("/filter")
@@ -84,8 +84,9 @@ public class ProfileVoteRestController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @RequestParam @Nullable LocalDate startDate,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            @RequestParam @Nullable LocalDate endDate) {
-        int userId = SecurityUtil.authUserId();
+            @RequestParam @Nullable LocalDate endDate,
+            @AuthenticationPrincipal AuthorizedUser authUser) {
+        int userId = authUser.getId();
         log.info("getBetween dates {} - {} for user {}", startDate, endDate, userId);
         return repository.getBetween(userId, DateTimeUtil.atStartOfDayOrMin(startDate), DateTimeUtil.atStartOfNextDayOrMax(endDate));
     }

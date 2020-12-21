@@ -12,10 +12,7 @@ import ru.alexandrfunduk.vote.model.User;
 import ru.alexandrfunduk.vote.to.UserTo;
 
 import javax.validation.Valid;
-
 import java.net.URI;
-
-import static ru.alexandrfunduk.vote.web.SecurityUtil.authUserId;
 
 @RestController
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -51,7 +51,6 @@ public abstract class AbstractMenuRestController {
         Assert.notNull(menu, "menu must not be null");
         checkNew(menu);
         log.info("create {}", menu);
-        Assert.notNull(restaurantRepository.get(restaurantId), "restaurant mast be");
         return repository.save(menu, restaurantId);
     }
 
