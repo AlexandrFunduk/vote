@@ -29,7 +29,7 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu, @RequestBody Integer restaurantId) {
+    public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu, @RequestBody int restaurantId) {
         Menu created = super.create(menu, restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

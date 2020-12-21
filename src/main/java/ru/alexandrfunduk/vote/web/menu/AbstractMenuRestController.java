@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.alexandrfunduk.vote.model.Menu;
 import ru.alexandrfunduk.vote.repository.MenuRepository;
+import ru.alexandrfunduk.vote.repository.RestaurantRepository;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import java.time.LocalDate;
@@ -19,6 +21,9 @@ public abstract class AbstractMenuRestController {
 
     @Autowired
     private MenuRepository repository;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     public List<Menu> getAll() {
         log.info("getAll");
@@ -41,10 +46,12 @@ public abstract class AbstractMenuRestController {
                 : repository.getBetweenByRestaurant(DateTimeUtil.atStartOfDayOrMin(startDate), DateTimeUtil.atStartOfNextDayOrMax(endDate), restaurantId);
     }
 
-    public Menu create(Menu menu, Integer restaurantId) {
+    @Transactional
+    public Menu create(Menu menu, int restaurantId) {
         Assert.notNull(menu, "menu must not be null");
         checkNew(menu);
         log.info("create {}", menu);
+        Assert.notNull(restaurantRepository.get(restaurantId), "restaurant mast be");
         return repository.save(menu, restaurantId);
     }
 
@@ -53,10 +60,12 @@ public abstract class AbstractMenuRestController {
         checkNotFoundWithId(repository.delete(id), id);
     }
 
+    @Transactional
     public void update(Menu menu, int id, int restaurantId) {
         log.info("update {} with id={}", menu, id);
         Assert.notNull(menu, "menu must not be null");
         assureIdConsistent(menu, id);
+        assureRestaurantConsistentForMenu(repository.get(id).getRestaurant(),restaurantId);
         checkNotFoundWithId(repository.save(menu, restaurantId), id);
     }
 }
