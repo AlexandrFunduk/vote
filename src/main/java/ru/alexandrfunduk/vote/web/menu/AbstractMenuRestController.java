@@ -46,12 +46,8 @@ public abstract class AbstractMenuRestController {
     @Transactional
     public Menu create(MenuTo menuTo) {
         Assert.notNull(menuTo, "menu must not be null");
-        checkNew(menuTo);
-        log.info("create {}", menuTo);
-        Menu menu = new Menu();
-        menu.setId(menuTo.getId());
-        menu.setDay(menuTo.getDay());
-        menu.setDishPrise(menuTo.getDishPrise());
+        Menu menu = new Menu(null, menuTo.getDay(), null, menuTo.getDishPrise());
+        log.info("create {}", menu);
         return repository.save(menu, menuTo.getRestaurantId());
     }
 
@@ -61,11 +57,11 @@ public abstract class AbstractMenuRestController {
     }
 
     @Transactional
-    public void update(Menu menu, int id, int restaurantId) {
+    public void update(MenuTo menuTo, int id) {
+        Assert.notNull(menuTo, "menu must not be null");
+        Menu menu = new Menu(menuTo.getId(), menuTo.getDay(), null, menuTo.getDishPrise());
         log.info("update {} with id={}", menu, id);
-        Assert.notNull(menu, "menu must not be null");
         assureIdConsistent(menu, id);
-        assureRestaurantConsistentForMenu(repository.get(id).getRestaurant(), restaurantId);
-        checkNotFoundWithId(repository.save(menu, restaurantId), id);
+        checkNotFoundWithId(repository.save(menu, menuTo.getRestaurantId()), id);
     }
 }
