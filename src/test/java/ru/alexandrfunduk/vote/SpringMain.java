@@ -8,6 +8,8 @@ import ru.alexandrfunduk.vote.model.User;
 import ru.alexandrfunduk.vote.repository.RestaurantRepository;
 import ru.alexandrfunduk.vote.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 
 public class SpringMain {
@@ -27,6 +29,8 @@ public class SpringMain {
             System.out.println(">>" + restaurantRepository.getAll());
         }
         System.out.println(">>>>>>>>>>>222");
+        LocalDateTime dateTime = LocalDateTime.of(2020,12,22,11,0,0);
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!" + dateTime.toLocalTime().isBefore(LocalTime.of(11, 0, 0)));
 
     }
 }

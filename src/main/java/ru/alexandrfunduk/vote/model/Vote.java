@@ -1,17 +1,20 @@
 package ru.alexandrfunduk.vote.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.alexandrfunduk.vote.View;
+import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 public class Vote extends AbstractBaseEntity {
 
     @NotNull
-    @Column(name = "dateTime")
-    LocalDateTime dateTime;
+    @Column(name = "date")
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
+    LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -23,12 +26,12 @@ public class Vote extends AbstractBaseEntity {
     @NotNull(groups = View.Persist.class)
     Restaurant restaurant;
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public User getUser() {
@@ -51,7 +54,7 @@ public class Vote extends AbstractBaseEntity {
     public String toString() {
         return "Vote{" +
                 "id=" + id +
-                ", dateTime=" + dateTime +
+                ", date=" + date +
                 ", user=" + user +
                 ", restaurant=" + restaurant +
                 '}';

@@ -1,12 +1,18 @@
 package ru.alexandrfunduk.vote.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.alexandrfunduk.vote.model.Vote;
+import ru.alexandrfunduk.vote.to.VoteTo;
+import ru.alexandrfunduk.vote.util.exception.ApplicationException;
+import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class VoteRepository {
@@ -20,37 +26,64 @@ public class VoteRepository {
         this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
-    public Vote save(Vote vote, int userId, int restaurantId) {
+    @Transactional
+    public VoteTo save(Vote vote, int userId, int restaurantId) {
         LocalDateTime dateTime = LocalDateTime.now();
-        if (!vote.isNew() && (get(vote.getId(), userId) == null || !dateTime.toLocalTime().isAfter(LocalTime.of(11, 0, 0)))) {
+        if (!vote.isNew() && (get(vote.getId(), userId) == null)) {
             return null;
         }
-        vote.setDateTime(dateTime);
-        vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
-        vote.setUser(crudUserRepository.getOne(userId));
-        return crudRepository.save(vote);
+        if (dateTime.toLocalTime().isBefore(LocalTime.of(11, 0, 0))) {
+            vote.setDate(dateTime.toLocalDate());
+            vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
+            vote.setUser(crudUserRepository.getOne(userId));
+            return new VoteTo(crudRepository.save(vote).getId(), vote.getDate(), restaurantId, userId);
+        }
+        throw new ApplicationException("edit vote after 11:00", ErrorType.VALIDATION_ERROR);
     }
 
     public boolean delete(int id, int userId) {
         return crudRepository.delete(id, userId) != 0;
     }
 
-    public Vote get(int id, int userId) {
+    public VoteTo get(int id, int userId) {
         return crudRepository.findById(id)
                 .filter(meal -> meal.getUser().getId() == userId)
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), userId))
                 .orElse(null);
     }
 
-    public List<Vote> getAll(int userId) {
-        return crudRepository.getAll(userId);
+    public List<VoteTo> getAll() {
+        return crudRepository.findAll(Sort.by(Sort.Direction.DESC, "date")).stream()
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), vote.getUser().getId()))
+                .collect(Collectors.toList());
     }
 
-    public Vote getByDay(int userId, LocalDate date) {
-        List<Vote> votes = getBetween(userId, date, date.plusDays(1));
-        return votes.isEmpty() ? null : votes.get(0);
+    public List<VoteTo> getAll(int userId) {
+        return crudRepository.getAll(userId).stream()
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), userId))
+                .collect(Collectors.toList());
     }
 
-    public List<Vote> getBetween(int userId, LocalDate startDate, LocalDate endDate) {
-        return crudRepository.getBetween(userId, startDate.atStartOfDay(), endDate.atStartOfDay());
+    public VoteTo getByDay(LocalDate date, int userId) {
+        Vote vote = crudRepository.getVoteByDate(date, userId);
+        return new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), userId);
+    }
+
+    public List<VoteTo> getByDay(LocalDate date) {
+        return crudRepository.getVotesByDate(date).stream()
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), vote.getUser().getId()))
+                .collect(Collectors.toList());
+    }
+
+    public List<VoteTo> getBetween(int userId, LocalDate startDate, LocalDate endDate) {
+        return crudRepository.getBetweenByUser(startDate, endDate, userId).stream()
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), userId))
+                .collect(Collectors.toList());
+    }
+
+    public List<VoteTo> getBetween(LocalDate startDate, LocalDate endDate) {
+        return crudRepository.getBetween(startDate, endDate).stream()
+                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getRestaurant().getId(), vote.getUser().getId()))
+                .collect(Collectors.toList());
     }
 }
