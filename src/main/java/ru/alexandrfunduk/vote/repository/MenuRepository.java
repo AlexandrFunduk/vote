@@ -2,6 +2,7 @@ package ru.alexandrfunduk.vote.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.alexandrfunduk.vote.model.Menu;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ public class MenuRepository {
         this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
+    @Transactional
     public Menu save(Menu menu, int restaurantId) {
         if (!menu.isNew() && get(menu.getId()) == null) {
             return null;

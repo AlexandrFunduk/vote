@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.alexandrfunduk.vote.model.Menu;
+import ru.alexandrfunduk.vote.to.MenuTo;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -29,8 +31,8 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Menu> createWithLocation(@RequestBody Menu menu, @RequestBody int restaurantId) {
-        Menu created = super.create(menu, restaurantId);
+    public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody MenuTo menuTo) {
+        Menu created = super.create(menuTo);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

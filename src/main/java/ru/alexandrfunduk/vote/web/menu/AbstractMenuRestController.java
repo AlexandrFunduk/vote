@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.alexandrfunduk.vote.model.Menu;
 import ru.alexandrfunduk.vote.repository.MenuRepository;
-import ru.alexandrfunduk.vote.repository.RestaurantRepository;
+import ru.alexandrfunduk.vote.to.MenuTo;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import java.time.LocalDate;
@@ -21,9 +21,6 @@ public abstract class AbstractMenuRestController {
 
     @Autowired
     private MenuRepository repository;
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
 
     public List<Menu> getAll() {
         log.info("getAll");
@@ -47,11 +44,15 @@ public abstract class AbstractMenuRestController {
     }
 
     @Transactional
-    public Menu create(Menu menu, int restaurantId) {
-        Assert.notNull(menu, "menu must not be null");
-        checkNew(menu);
-        log.info("create {}", menu);
-        return repository.save(menu, restaurantId);
+    public Menu create(MenuTo menuTo) {
+        Assert.notNull(menuTo, "menu must not be null");
+        checkNew(menuTo);
+        log.info("create {}", menuTo);
+        Menu menu = new Menu();
+        menu.setId(menuTo.getId());
+        menu.setDay(menuTo.getDay());
+        menu.setDishPrise(menuTo.getDishPrise());
+        return repository.save(menu, menuTo.getRestaurantId());
     }
 
     public void delete(int id) {
@@ -64,7 +65,7 @@ public abstract class AbstractMenuRestController {
         log.info("update {} with id={}", menu, id);
         Assert.notNull(menu, "menu must not be null");
         assureIdConsistent(menu, id);
-        assureRestaurantConsistentForMenu(repository.get(id).getRestaurant(),restaurantId);
+        assureRestaurantConsistentForMenu(repository.get(id).getRestaurant(), restaurantId);
         checkNotFoundWithId(repository.save(menu, restaurantId), id);
     }
 }

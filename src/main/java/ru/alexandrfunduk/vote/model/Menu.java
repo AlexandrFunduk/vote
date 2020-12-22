@@ -8,7 +8,6 @@ import ru.alexandrfunduk.vote.View;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Map;
@@ -17,7 +16,7 @@ import java.util.Map;
 @Table(name = "menu", uniqueConstraints = {@UniqueConstraint(columnNames = {"restaurant_id", "day"}, name = "restaurant_id_day_idx")})
 public class Menu extends AbstractBaseEntity {
     @Column
-    @NotBlank
+    @NotNull
     @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
     private LocalDate day;
 
@@ -32,19 +31,20 @@ public class Menu extends AbstractBaseEntity {
     @MapKeyColumn(name = "dish")
     @Column(name = "prise")
     @BatchSize(size = 200)
-    private Map<String, Integer> dish_prise;
+    @NotNull
+    private Map<String, Integer> dishPrise;
 
-    public Menu(LocalDate day, Restaurant restaurant, Map<String, Integer> dish_prise) {
+    public Menu(LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrise) {
         this.day = day;
         this.restaurant = restaurant;
-        this.dish_prise = dish_prise;
+        this.dishPrise = dishPrise;
     }
 
-    public Menu(Integer id, LocalDate day, Restaurant restaurant, Map<String, Integer> dish_prise) {
+    public Menu(Integer id, LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrise) {
         super(id);
         this.day = day;
         this.restaurant = restaurant;
-        this.dish_prise = dish_prise;
+        this.dishPrise = dishPrise;
     }
 
     public Menu() {
@@ -67,12 +67,12 @@ public class Menu extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public Map<String, Integer> getDish_prise() {
-        return dish_prise;
+    public Map<String, Integer> getDishPrise() {
+        return dishPrise;
     }
 
-    public void setDish_prise(Map<String, Integer> dish_prise) {
-        this.dish_prise = dish_prise;
+    public void setDishPrise(Map<String, Integer> dish_prise) {
+        this.dishPrise = dish_prise;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Menu extends AbstractBaseEntity {
                 "id=" + id +
                 ", day=" + day +
                 ", restaurant=" + restaurant +
-                ", dish_prise=" + dish_prise +
+                ", dish_prise=" + dishPrise +
                 '}';
     }
 }
