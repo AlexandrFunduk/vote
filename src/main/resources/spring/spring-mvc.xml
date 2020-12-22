@@ -1,14 +1,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:security="http://www.springframework.org/schema/security"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <bean class="ru.alexandrfunduk.vote.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-<!--    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>-->
+    <!--    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>-->
 
     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"/>
     <mvc:annotation-driven conversion-service="conversionService">
@@ -29,6 +29,17 @@
             <bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver "/>
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+          p:cacheSeconds="5"
+          p:defaultEncoding="UTF-8">
+        <property name="basenames" value="classpath:/messages/app"/>
+        <property name="fallbackToSystemLocale" value="false"/>
+    </bean>
+
+    <bean class="org.springframework.context.support.MessageSourceAccessor">
+        <constructor-arg ref="messageSource"/>
+    </bean>
 
     <context:component-scan base-package="ru.alexandrfunduk.**.web"/>
 

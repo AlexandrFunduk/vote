@@ -3,6 +3,7 @@ package ru.alexandrfunduk.vote.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,16 +29,21 @@ public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
     public static final String EXCEPTION_DUPLICATE_EMAIL = "exception.user.duplicateEmail";
-    public static final String EXCEPTION_DUPLICATE_RESTAURANT = "exception.restaurant.duplicate"; //todo
-    public static final String EXCEPTION_DUPLICATE_VOTE_TODAY = "exception.vote.duplicate"; //todo
-    public static final String EXCEPTION_DUPLICATE_MENU_TODAY = "exception.menu.duplicate"; //todo
-    public static final String EXCEPTION_DUPLICATE_DISH_TODAY = "exception.dish.duplicate"; //todo
+    public static final String EXCEPTION_DUPLICATE_RESTAURANT = "exception.restaurant.duplicate";
+    public static final String EXCEPTION_DUPLICATE_VOTE_TODAY = "exception.vote.duplicate";
+    public static final String EXCEPTION_DUPLICATE_MENU_TODAY = "exception.menu.duplicate";
 
     private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
             "vote_unique_user_date_time_idx", EXCEPTION_DUPLICATE_VOTE_TODAY,
             "menu_unique_day_restaurant_name_idx", EXCEPTION_DUPLICATE_MENU_TODAY,
             "restaurant_unique_name_idx", EXCEPTION_DUPLICATE_RESTAURANT);
+
+    private final MessageSourceAccessor messageSourceAccessor;
+
+    public ExceptionInfoHandler(MessageSourceAccessor messageSourceAccessor) {
+        this.messageSourceAccessor = messageSourceAccessor;
+    }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, NotFoundException e) {
@@ -46,7 +52,7 @@ public class ExceptionInfoHandler {
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorInfo> updateRestrictionError(HttpServletRequest req, ApplicationException appEx) {
-        return logAndGetErrorInfo(req, appEx, false, appEx.getType(), appEx.getMsgCode()); //todo code -> msg
+        return logAndGetErrorInfo(req, appEx, false, appEx.getType(), messageSourceAccessor.getMessage(appEx.getMsgCode()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -56,7 +62,7 @@ public class ExceptionInfoHandler {
             String lowerCaseMsg = rootMsg.toLowerCase();
             for (Map.Entry<String, String> entry : CONSTRAINS_I18N_MAP.entrySet()) {
                 if (lowerCaseMsg.contains(entry.getKey())) {
-                    return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, entry.getValue()); //todo code -> msg
+                    return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, messageSourceAccessor.getMessage(entry.getValue()));
                 }
             }
         }
@@ -66,7 +72,7 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorInfo> bindValidationError(HttpServletRequest req, BindException e) {
         String[] details = e.getBindingResult().getFieldErrors().stream()
-                .map(FieldError::getField) //todo code -> msg
+                .map(messageSourceAccessor::getMessage)
                 .toArray(String[]::new);
 
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, details);
@@ -86,7 +92,8 @@ public class ExceptionInfoHandler {
     private ResponseEntity<ErrorInfo> logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logStackTrace, ErrorType errorType, String... details) {
         Throwable rootCause = ValidationUtil.logAndGetRootCause(log, req, e, logStackTrace, errorType);
         return ResponseEntity.status(errorType.getStatus())
-                .body(new ErrorInfo(req.getRequestURL(), errorType, errorType.getErrorCode(),
+                .body(new ErrorInfo(req.getRequestURL(), errorType,
+                        messageSourceAccessor.getMessage(errorType.getErrorCode()),
                         details.length != 0 ? details : new String[]{ValidationUtil.getMessage(rootCause)})
                 );
     }
