@@ -35,7 +35,7 @@ public class VoteRepository {
         if (!vote.isNew() && (get(vote.getId(), userId) == null)) {
             return null;
         }
-        if (dateTime.toLocalTime().isBefore(LocalTime.of(23, 0, 0))) { //todo time to property
+        if (true || dateTime.toLocalTime().isBefore(LocalTime.of(11, 0, 0))) { //todo time to property
             vote.setDate(dateTime.toLocalDate());
             vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
             vote.setUser(crudUserRepository.getOne(userId));
@@ -62,7 +62,7 @@ public class VoteRepository {
     }
 
     public List<VoteTo> getAll() {
-        return crudRepository.findAll(Sort.by("date").descending().and(Sort.by("id").ascending())).stream()
+        return crudRepository.findAll(Sort.by("date").descending().and(Sort.by("id").descending())).stream()
                 .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId()))
                 .collect(Collectors.toList());
     }
