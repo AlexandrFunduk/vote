@@ -8,6 +8,8 @@ import ru.alexandrfunduk.vote.model.Menu;
 import java.time.LocalDate;
 import java.util.List;
 
+import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
+
 @Repository
 public class MenuRepository {
 
@@ -35,7 +37,7 @@ public class MenuRepository {
     }
 
     public Menu get(int id) {
-        return crudRepository.findById(id).orElse(null);
+        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
     public List<Menu> getAll() {
@@ -48,10 +50,6 @@ public class MenuRepository {
 
     public List<Menu> getByDay(LocalDate date) {
         return crudRepository.getMenusByDay(date);
-    }
-
-    public Menu getByDayAndRestaurant(Integer restaurantId, LocalDate date) {
-        return crudRepository.getDayMenuByRestaurant(restaurantId, date);
     }
 
     public List<Menu> getBetween(LocalDate startDate, LocalDate endDate) {

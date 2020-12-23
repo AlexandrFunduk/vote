@@ -28,7 +28,7 @@ import static ru.alexandrfunduk.vote.UserTestData.*;
 @ExtendWith(TimingExtension.class)
 class UserServiceTest {
     @Autowired
-    protected UserService service;
+    private UserService service;
 
     @Test
     void create() {
@@ -84,7 +84,7 @@ class UserServiceTest {
     @Test
     void getAll() {
         List<User> all = service.getAll();
-        USER_MATCHER.assertMatch(all, admin, user, user1, user2);
+        USER_MATCHER.assertMatch(all, admin, user1, user2, user3);
     }
 
     @Test

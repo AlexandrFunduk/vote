@@ -6,6 +6,8 @@ import ru.alexandrfunduk.vote.model.Restaurant;
 
 import java.util.List;
 
+import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
+
 @Repository
 public class RestaurantRepository {
     private static final Sort SORT_NAME = Sort.by(Sort.Direction.ASC, "name");
@@ -25,7 +27,7 @@ public class RestaurantRepository {
     }
 
     public Restaurant get(int id) {
-        return crudRepository.findById(id).orElse(null);
+        return checkNotFoundWithId(crudRepository.findById(id).orElse(null),id);
     }
 
     public List<Restaurant> getAll() {

@@ -22,7 +22,7 @@ public interface CrudMenuRepository extends JpaRepository<Menu, Integer> {
     List<Menu> getBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Modifying
-    @Query("SELECT m from Menu m WHERE m.day >= :startDate AND m.day < :endDate AND m.restaurant.id =:restaurant_id ORDER BY m.day DESC")
+    @Query("SELECT menu from Menu menu WHERE menu.day >= :startDate AND menu.day < :endDate AND menu.restaurant.id =:restaurant_id ORDER BY menu.day DESC")
     List<Menu> getBetweenByRestaurant(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("restaurant_id") int restaurantId);
 
     @Modifying
@@ -30,7 +30,7 @@ public interface CrudMenuRepository extends JpaRepository<Menu, Integer> {
     Menu getDayMenuByRestaurant(@Param("restaurant_id") int restaurantId, @Param("date") LocalDate date);
 
     @Modifying
-    @Query("SELECT menu FROM Menu menu WHERE menu.restaurant.id=:restaurant_id")
+    @Query("SELECT menu FROM Menu menu WHERE menu.restaurant.id=:restaurant_id ORDER BY menu.day DESC")
     List<Menu> getMenusByRestaurant(@Param("restaurant_id") int restaurant_Id);
 
     List<Menu> getMenusByDay(LocalDate date);

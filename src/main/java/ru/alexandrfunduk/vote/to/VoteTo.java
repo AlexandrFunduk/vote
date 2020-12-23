@@ -1,6 +1,8 @@
 package ru.alexandrfunduk.vote.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.alexandrfunduk.vote.HasId;
+import ru.alexandrfunduk.vote.util.DateTimeUtil;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -8,6 +10,7 @@ import java.time.LocalDate;
 public class VoteTo extends BaseTo implements HasId {
 
     @NotNull
+    @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
     LocalDate date;
 
     @NotNull
@@ -19,7 +22,7 @@ public class VoteTo extends BaseTo implements HasId {
     public VoteTo() {
     }
 
-    public VoteTo(Integer id, @NotNull LocalDate date, Integer restaurantId, Integer userId) {
+    public VoteTo(Integer id, @NotNull LocalDate date, Integer userId, Integer restaurantId) {
         super(id);
         this.date = date;
         this.restaurantId = restaurantId;

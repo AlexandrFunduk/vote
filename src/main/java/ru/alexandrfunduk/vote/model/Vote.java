@@ -26,6 +26,15 @@ public class Vote extends AbstractBaseEntity {
     @NotNull(groups = View.Persist.class)
     Restaurant restaurant;
 
+    public Vote(){}
+
+    public Vote(Integer id, @NotNull LocalDate date, @NotNull(groups = View.Persist.class) User user, @NotNull(groups = View.Persist.class) Restaurant restaurant) {
+        super(id);
+        this.date = date;
+        this.user = user;
+        this.restaurant = restaurant;
+    }
+
     public LocalDate getDate() {
         return date;
     }

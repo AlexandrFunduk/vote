@@ -60,7 +60,7 @@ public class MenuTo extends BaseTo implements HasId {
                 "id=" + id +
                 ", day=" + day +
                 ", restaurantId=" + restaurantId +
-                ", dish_prise=" + dishPrise +
+                ", dishPrise=" + dishPrise +
                 '}';
     }
 }

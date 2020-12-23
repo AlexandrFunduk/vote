@@ -18,20 +18,22 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
     int delete(@Param("id") int id, @Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.user.id=:user_id ORDER BY vote.date desc")
+    @Query("SELECT vote FROM Vote vote WHERE vote.user.id=:user_id ORDER BY vote.date desc, vote.id desc")
     List<Vote> getAll(@Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.date>=:startDate and vote.date<:endDate and vote.user.id=:user_id  ORDER BY vote.date desc")
+    @Query("SELECT vote FROM Vote vote WHERE vote.date>=:startDate and vote.date<:endDate and vote.user.id=:user_id  ORDER BY vote.date desc, vote.id desc")
     List<Vote> getBetweenByUser(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("user_id") int userId);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.date>=:startDate and vote.date<:endDate ORDER BY vote.date desc")
+    @Query("SELECT vote FROM Vote vote WHERE vote.date>=:startDate and vote.date<:endDate ORDER BY vote.date desc, vote.id desc ")
     List<Vote> getBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
-    List<Vote> getVotesByDate(LocalDate date);
+    @Modifying
+    @Query("SELECT vote FROM Vote vote WHERE vote.date=:date ORDER BY vote.date desc , vote.id desc ")
+    List<Vote> getByDate(@Param("date") LocalDate date);
 
     @Modifying
-    @Query("SELECT vote FROM Vote vote WHERE vote.date>=:date and vote.user.id=:user_id")
-    Vote getVoteByDate(@Param("date") LocalDate date, @Param("user_id") int userId);
+    @Query("SELECT vote FROM Vote vote WHERE vote.date=:date and vote.user.id=:user_id")
+    List<Vote> getVoteByDate(@Param("date") LocalDate date, @Param("user_id") int userId);
 }
