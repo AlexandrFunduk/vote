@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import java.util.Date;
 
 @Entity
-public class Restaurant  extends AbstractNamedRegisteredEntity{
+public class Restaurant extends AbstractNamedRegisteredEntity {
     public Restaurant() {
     }
 

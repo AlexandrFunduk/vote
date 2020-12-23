@@ -13,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class TestUtil {
+    public static final int NOT_FOUND = 10;
+
     public static String getContent(MvcResult result) throws UnsupportedEncodingException {
         return result.getResponse().getContentAsString();
     }

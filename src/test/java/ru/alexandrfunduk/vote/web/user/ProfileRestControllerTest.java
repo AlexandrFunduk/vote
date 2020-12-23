@@ -14,7 +14,6 @@ import ru.alexandrfunduk.vote.util.UserUtil;
 import ru.alexandrfunduk.vote.web.AbstractControllerTest;
 import ru.alexandrfunduk.vote.web.json.JsonUtil;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

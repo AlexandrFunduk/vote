@@ -48,8 +48,7 @@ public abstract class AbstractRestaurantRestController {
 
     public Restaurant create(Restaurant restaurant) {
         log.info("create {}", restaurant);
-        Assert.notNull(restaurant, "user must not be null");
-        checkNew(restaurant);
+        Assert.notNull(restaurant, "restaurant must not be null");
         return repository.save(restaurant);
     }
 
@@ -58,10 +57,10 @@ public abstract class AbstractRestaurantRestController {
         checkNotFoundWithId(repository.delete(id), id);
     }
 
-    public void update(Restaurant restaurant, int id)  throws BindException {
+    public void update(Restaurant restaurant, int id) throws BindException {
         log.info("update {} with id={}", restaurant, id);
         assureIdConsistent(restaurant, id);
-        Assert.notNull(restaurant, "user must not be null");
+        Assert.notNull(restaurant, "restaurant must not be null");
         checkNotFoundWithId(repository.save(restaurant), restaurant.id());
     }
 

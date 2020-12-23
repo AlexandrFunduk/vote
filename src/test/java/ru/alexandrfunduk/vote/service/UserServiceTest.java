@@ -18,6 +18,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.alexandrfunduk.vote.TestUtil.NOT_FOUND;
 import static ru.alexandrfunduk.vote.UserTestData.*;
 
 @SpringJUnitConfig(locations = {
