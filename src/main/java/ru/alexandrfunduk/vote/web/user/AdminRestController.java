@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.alexandrfunduk.vote.View;
 import ru.alexandrfunduk.vote.model.User;
-import ru.alexandrfunduk.vote.to.UserTo;
 
 import java.net.URI;
 import java.util.List;

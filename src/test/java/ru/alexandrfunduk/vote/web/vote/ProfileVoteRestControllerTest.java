@@ -7,17 +7,22 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.alexandrfunduk.vote.repository.VoteRepository;
 import ru.alexandrfunduk.vote.to.VoteTo;
+import ru.alexandrfunduk.vote.util.VoteUtil;
+import ru.alexandrfunduk.vote.util.exception.NotFoundException;
 import ru.alexandrfunduk.vote.web.AbstractControllerTest;
 import ru.alexandrfunduk.vote.web.json.JsonUtil;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.alexandrfunduk.vote.RestaurantTestData.RESTAURANT_ID;
 import static ru.alexandrfunduk.vote.TestUtil.*;
-import static ru.alexandrfunduk.vote.UserTestData.user1;
-import static ru.alexandrfunduk.vote.UserTestData.user2;
+import static ru.alexandrfunduk.vote.UserTestData.*;
 import static ru.alexandrfunduk.vote.VoteTestDate.*;
+import static ru.alexandrfunduk.vote.util.exception.ErrorType.DATA_ERROR;
 import static ru.alexandrfunduk.vote.util.exception.ErrorType.VALIDATION_ERROR;
 
 class ProfileVoteRestControllerTest extends AbstractControllerTest {
@@ -57,7 +62,9 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void create() throws Exception {
+    void createBefore1100() throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(true);
         VoteTo newVoteTo = getNewTo();
         ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +78,36 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createInvalid() throws Exception {
+    void createInvalidBefore1100() throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(true);
+        ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(NOT_FOUND))
+                .with(userHttpBasic(user1)))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(errorType(DATA_ERROR));
+    }
+
+    @Test
+    void createAfter1100() throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(false);
+        VoteTo newVoteTo = getNewTo();
+        ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(RESTAURANT_ID))
+                .with(userHttpBasic(user1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void createInvalidAfter1100() throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(false);
         ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(NOT_FOUND))
@@ -80,17 +116,60 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR));
     }
-
     @Test
-    void delete() {
+    void delete() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + VOTE_ID)
+                .with(userHttpBasic(user1)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+        assertThrows(NotFoundException.class, () -> repository.get(USER_ID));
     }
 
     @Test
-    void update() {
+    void deleteNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND)
+                .with(userHttpBasic(user1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    void getFiltered() {
+    void updateBefore1100()  throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(true);
+        perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user3))
+                .content(JsonUtil.writeValue(RESTAURANT_ID+1)))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        VOTE_TO_MATCHER.assertMatch(repository.get(7+VOTE_ID), voteToUpdated);
+    }
+
+    @Test
+    void updateAfter1100()  throws Exception {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(false);
+        perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user3))
+                .content(JsonUtil.writeValue(RESTAURANT_ID+1)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(VALIDATION_ERROR));
+    }
+
+    @Test
+    void getFiltered() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "filter")
+                .param("startDate", "2020-12-02")
+                .param("endDate", "2020-12-04")
+                .with(userHttpBasic(user1)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VOTE_TO_MATCHER.contentJson(List.of(voteTo4)));
     }
 
     @Test

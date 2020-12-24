@@ -13,6 +13,8 @@ import ru.alexandrfunduk.vote.AuthorizedUser;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
+import ru.alexandrfunduk.vote.util.exception.ApplicationException;
+import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -46,6 +48,9 @@ public class ProfileVoteRestController extends AbstractVoteController {
         int userId = authUser.getId();
         VoteTo created = repository.save(new Vote(), userId, restaurantId);
         Assert.notNull(created, "vote can not be created");
+        if (created.getId() == null) {
+            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
+        }
         log.info("create {} for user {}", created, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -67,7 +72,10 @@ public class ProfileVoteRestController extends AbstractVoteController {
         vote.setId(id);
         int userId = authUser.getId();
         log.info("update {} for user {}", vote, userId);
-        checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
+        VoteTo updated = checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
+        if (updated.getId() == null) {
+            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
+        }
     }
 
     @GetMapping("/filter")

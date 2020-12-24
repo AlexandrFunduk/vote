@@ -39,7 +39,6 @@ public class User extends AbstractNamedRegisteredEntity implements HasIdAndEmail
     private boolean enabled = true;
 
 
-
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique_idx")})
@@ -99,7 +98,6 @@ public class User extends AbstractNamedRegisteredEntity implements HasIdAndEmail
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
     }
-
 
 
     @Override

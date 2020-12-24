@@ -3,14 +3,15 @@ package ru.alexandrfunduk.vote.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.alexandrfunduk.vote.model.Restaurant;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
+import ru.alexandrfunduk.vote.util.VoteUtil;
 import ru.alexandrfunduk.vote.util.exception.ApplicationException;
 import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,13 +36,18 @@ public class VoteRepository {
         if (!vote.isNew() && (get(vote.getId(), userId) == null)) {
             return null;
         }
-        if (true || dateTime.toLocalTime().isBefore(LocalTime.of(11, 0, 0))) { //todo time to property
+        if (VoteUtil.enableCreateAndUpdate(dateTime)) {
             vote.setDate(dateTime.toLocalDate());
-            vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
             vote.setUser(crudUserRepository.getOne(userId));
-            return new VoteTo(crudRepository.save(vote).getId(), vote.getDate(), userId, restaurantId);
+            Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
+            vote.setRestaurant(restaurant);
+            if (restaurant == null) {
+                return new VoteTo();
+            }
+            Vote dbVote = crudRepository.save(vote);
+            return new VoteTo(dbVote.getId(), dbVote.getDate(), userId, dbVote.getRestaurant().id());
         }
-        throw new ApplicationException("Create or edit vote after 11:00", ErrorType.VALIDATION_ERROR);
+        throw new ApplicationException("exception.vote.after11", ErrorType.VALIDATION_ERROR);
     }
 
     public boolean delete(int id, int userId) {

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = MenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class MenuRestController extends AbstractMenuRestController{
+public class MenuRestController extends AbstractMenuRestController {
     static final String REST_URL = "/rest/menu";
 
     @Override

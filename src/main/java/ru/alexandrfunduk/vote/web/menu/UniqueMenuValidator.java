@@ -29,8 +29,8 @@ public class UniqueMenuValidator implements org.springframework.validation.Valid
         LocalDate date = menuTo.getDay();
         if (date != null && restaurantId != null) {
             Menu dbMenu = repository.getByDayAndRestaurant(restaurantId, date);
-            if (dbMenu != null && !dbMenu.getRestaurant().getId().equals(restaurantId)) {
-                errors.rejectValue("day" ,ExceptionInfoHandler.EXCEPTION_DUPLICATE_MENU_TODAY);
+            if (dbMenu != null && dbMenu.getRestaurant().id() == restaurantId) {
+                errors.rejectValue("day", ExceptionInfoHandler.EXCEPTION_DUPLICATE_MENU_TODAY);
             }
         }
     }

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alexandrfunduk.vote.model.Menu;
+import ru.alexandrfunduk.vote.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +29,11 @@ public class MenuRepository {
         if (!menu.isNew() && get(menu.getId()) == null) {
             return null;
         }
-        menu.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
+        Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
+        menu.setRestaurant(restaurant);
+        if (restaurant == null) {
+            return menu;
+        }
         return crudRepository.save(menu);
     }
 
@@ -54,7 +59,7 @@ public class MenuRepository {
 
     public Menu getByDayAndRestaurant(int restaurantId, LocalDate date) {
         List<Menu> menus = crudRepository.getDayMenuByRestaurant(restaurantId, date);
-        return menus.isEmpty() ? null :menus.get(0);
+        return menus.isEmpty() ? null : menus.get(0);
     }
 
 

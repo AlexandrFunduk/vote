@@ -28,8 +28,8 @@ public abstract class AbstractMenuRestController {
     @Autowired
     private MenuRepository repository;
 
-        @Autowired
-        private UniqueMenuValidator menuValidator;
+    @Autowired
+    private UniqueMenuValidator menuValidator;
 
     @Autowired
     @Qualifier("defaultValidator")
@@ -70,16 +70,20 @@ public abstract class AbstractMenuRestController {
     }
 
     @Transactional
-    public void update(MenuTo menuTo, int id) throws BindException {
+    public Menu update(MenuTo menuTo, int id) throws BindException {
         Assert.notNull(menuTo, "menu must not be null");
         Menu menu = new Menu(menuTo.getId(), menuTo.getDay(), null, menuTo.getDishPrise());
         log.info("update {} with id={}", menuTo, id);
         assureIdConsistent(menu, id);
-        checkNotFoundWithId(repository.save(menu, menuTo.getRestaurantId()), id);
+        return checkNotFoundWithId(repository.save(menu, menuTo.getRestaurantId()), id);
     }
 
     protected void validateBeforeUpdate(MenuTo menuTo, int id) throws BindException {
         assureIdConsistent(menuTo, id);
+        validateBefore(menuTo);
+    }
+
+    protected void validateBefore(MenuTo menuTo) throws BindException {
         DataBinder binder = new DataBinder(menuTo);
         binder.addValidators(menuValidator, validator);
         binder.validate(View.Web.class);

@@ -30,6 +30,7 @@ public class VoteTestDate {
     public static final VoteTo voteTo6 = new VoteTo(VOTE_ID + 5, LocalDate.of(2020, 12, 2), USER_ID+2, RESTAURANT_ID);
     public static final VoteTo voteTo7 = new VoteTo(VOTE_ID + 6, LocalDate.now(), USER_ID+1, RESTAURANT_ID);
     public static final VoteTo voteTo8 = new VoteTo(VOTE_ID + 7, LocalDate.now(), USER_ID+2, RESTAURANT_ID);
+    public static final VoteTo voteToUpdated = new VoteTo(VOTE_ID + 7, LocalDate.now(), USER_ID+2, RESTAURANT_ID+1);
     public static final List<VoteTo> voteTos = List.of(voteTo8, voteTo7,voteTo6,voteTo5,voteTo4,voteTo3,voteTo2,voteTo1);
 
     public static Vote getNew() {

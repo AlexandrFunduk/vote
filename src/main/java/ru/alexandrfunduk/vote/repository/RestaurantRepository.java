@@ -27,7 +27,7 @@ public class RestaurantRepository {
     }
 
     public Restaurant get(int id) {
-        return checkNotFoundWithId(crudRepository.findById(id).orElse(null),id);
+        return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
     public List<Restaurant> getAll() {

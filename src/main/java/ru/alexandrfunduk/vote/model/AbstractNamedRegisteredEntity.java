@@ -23,7 +23,8 @@ public abstract class AbstractNamedRegisteredEntity extends AbstractBaseEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
 
-    protected AbstractNamedRegisteredEntity() {}
+    protected AbstractNamedRegisteredEntity() {
+    }
 
     protected AbstractNamedRegisteredEntity(Integer id, String name) {
         super(id);

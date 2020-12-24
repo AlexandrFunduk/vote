@@ -118,6 +118,6 @@ class AdminMenuRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR))
-                .andExpect(detailMessage(ExceptionInfoHandler.EXCEPTION_DUPLICATE_RESTAURANT));
+                .andExpect(detailMessage(ExceptionInfoHandler.EXCEPTION_DUPLICATE_MENU_TODAY));
     }
 }
