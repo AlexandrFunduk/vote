@@ -80,4 +80,10 @@ class MenuRepositoryTest {
         List<Menu> menus = repository.getBetweenByRestaurant(LocalDate.of(2020, 12, 1), LocalDate.of(2020, 12, 2), RestaurantTestData.RESTAURANT_ID);
         MENU_MATCHER.assertMatch(menus, menu1);
     }
+
+    @Test
+    void getByDayAndRestaurant() {
+        Menu menu = repository.getByDayAndRestaurant(RestaurantTestData.RESTAURANT_ID, LocalDate.of(2020, 12, 1));
+        MENU_MATCHER.assertMatch(menu, menu1);
+    }
 }

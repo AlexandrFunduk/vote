@@ -1,10 +1,8 @@
 package ru.alexandrfunduk.vote.web.restaurant;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.alexandrfunduk.vote.repository.RestaurantRepository;
 import ru.alexandrfunduk.vote.web.AbstractControllerTest;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -18,8 +16,6 @@ import static ru.alexandrfunduk.vote.UserTestData.user1;
 
 class RestaurantRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = RestaurantRestController.REST_URL + "/";
-    @Autowired
-    private RestaurantRepository repository;
 
     @Test
     void getAll() throws Exception {

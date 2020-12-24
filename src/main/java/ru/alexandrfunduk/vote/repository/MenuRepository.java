@@ -52,6 +52,12 @@ public class MenuRepository {
         return crudRepository.getMenusByDay(date);
     }
 
+    public Menu getByDayAndRestaurant(int restaurantId, LocalDate date) {
+        List<Menu> menus = crudRepository.getDayMenuByRestaurant(restaurantId, date);
+        return menus.isEmpty() ? null :menus.get(0);
+    }
+
+
     public List<Menu> getBetween(LocalDate startDate, LocalDate endDate) {
         return crudRepository.getBetween(startDate, endDate);
     }

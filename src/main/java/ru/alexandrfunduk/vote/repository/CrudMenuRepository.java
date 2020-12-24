@@ -27,7 +27,7 @@ public interface CrudMenuRepository extends JpaRepository<Menu, Integer> {
 
     @Modifying
     @Query("SELECT menu FROM Menu menu WHERE menu.day=:date and menu.restaurant.id=:restaurant_id")
-    Menu getDayMenuByRestaurant(@Param("restaurant_id") int restaurantId, @Param("date") LocalDate date);
+    List<Menu> getDayMenuByRestaurant(@Param("restaurant_id") int restaurantId, @Param("date") LocalDate date);
 
     @Modifying
     @Query("SELECT menu FROM Menu menu WHERE menu.restaurant.id=:restaurant_id ORDER BY menu.day DESC")
