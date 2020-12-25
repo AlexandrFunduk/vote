@@ -1,5 +1,8 @@
 package ru.alexandrfunduk.vote.repository;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +16,6 @@ import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
 
 @Repository
 public class MenuRepository {
-
     private static final Sort SORT_DATE = Sort.by(Sort.Direction.DESC, "day");
 
     private final CrudMenuRepository crudRepository;
@@ -24,6 +26,12 @@ public class MenuRepository {
         this.crudRestaurantRepository = crudRestaurantRepository;
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "menus", allEntries = true),
+                    @CacheEvict(value = "menusDay", allEntries = true)
+            }
+    )
     @Transactional
     public Menu save(Menu menu, int restaurantId) {
         if (!menu.isNew() && get(menu.getId()) == null) {
@@ -37,6 +45,13 @@ public class MenuRepository {
         return crudRepository.save(menu);
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "menus", allEntries = true),
+                    @CacheEvict(value = "menusDay", allEntries = true)
+            }
+    )
+    @CacheEvict(value = "menus", allEntries = true)
     public boolean delete(int id) {
         return crudRepository.delete(id) != 0;
     }
@@ -45,6 +60,7 @@ public class MenuRepository {
         return checkNotFoundWithId(crudRepository.findById(id).orElse(null), id);
     }
 
+    @Cacheable("menus")
     public List<Menu> getAll() {
         return crudRepository.findAll(SORT_DATE);
     }
@@ -53,6 +69,7 @@ public class MenuRepository {
         return crudRepository.getMenusByRestaurant(restaurant_id);
     }
 
+    @Cacheable("menusDay")
     public List<Menu> getByDay(LocalDate date) {
         return crudRepository.getMenusByDay(date);
     }

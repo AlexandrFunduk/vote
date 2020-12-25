@@ -62,7 +62,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createBefore1100() throws Exception {
+    void createBeforeVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(true);
         VoteTo newVoteTo = getNewTo();
@@ -78,7 +78,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createInvalidBefore1100() throws Exception {
+    void createInvalidBeforeVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(true);
         ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -91,7 +91,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createAfter1100() throws Exception {
+    void createAfterVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(false);
         VoteTo newVoteTo = getNewTo();
@@ -105,7 +105,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createInvalidAfter1100() throws Exception {
+    void createInvalidAfterVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(false);
         ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
@@ -134,7 +134,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateBefore1100()  throws Exception {
+    void updateBeforeVotingTime()  throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(true);
         perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))
@@ -148,7 +148,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateAfter1100()  throws Exception {
+    void updateAfterVotingTime()  throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(false);
         perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))

@@ -58,6 +58,7 @@
                 <version>2.22.2</version>
                 <configuration>
                     <argLine>-Dfile.encoding=UTF-8</argLine>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
         </plugins>
@@ -135,11 +136,11 @@
             <artifactId>hibernate-validator</artifactId>
             <version>${hibernate-validator.version}</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jcache</artifactId>
             <version>${hibernate.version}</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
@@ -148,7 +149,7 @@
         </dependency>
 
         <!-- Cache -->
-        <!--<dependency>
+        <dependency>
             <groupId>javax.cache</groupId>
             <artifactId>cache-api</artifactId>
             <version>1.1.0</version>
@@ -160,13 +161,13 @@
             <version>${ehcache.version}</version>
         </dependency>
 
-        &lt;!&ndash;https://medium.com/criciumadev/its-time-migrating-to-java-11-5eb3868354f9&ndash;&gt;
+        <!--https://medium.com/criciumadev/its-time-migrating-to-java-11-5eb3868354f9-->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>2.4.0-b180830.0438</version>
         </dependency>
--->
+
         <!-- Web-->
         <dependency>
             <groupId>org.apache.tomcat</groupId>

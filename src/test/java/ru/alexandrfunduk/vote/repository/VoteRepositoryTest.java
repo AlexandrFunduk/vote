@@ -12,6 +12,8 @@ import ru.alexandrfunduk.vote.UserTestData;
 import ru.alexandrfunduk.vote.VoteTestDate;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
+import ru.alexandrfunduk.vote.util.VoteUtil;
+import ru.alexandrfunduk.vote.util.exception.ApplicationException;
 import ru.alexandrfunduk.vote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -33,7 +35,9 @@ class VoteRepositoryTest {
     private VoteRepository repository;
 
     @Test
-    void save() {
+    void saveBeforeVotingTime() {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(true);
         VoteTo created = repository.save(VoteTestDate.getNew(), UserTestData.USER_ID, RestaurantTestData.RESTAURANT_ID);
         int newId = created.id();
         Vote newVote = VoteTestDate.getNew();
@@ -42,6 +46,13 @@ class VoteRepositoryTest {
         VoteTo voteTo = new VoteTo(newId, newVote.getDate(), newVote.getUser().getId(), newVote.getRestaurant().getId());
         VOTE_TO_MATCHER.assertMatch(created, voteTo);
         VOTE_TO_MATCHER.assertMatch(repository.get(newId), voteTo);
+    }
+
+    @Test
+    void saveAfterVotingTime() {
+        VoteUtil.setImitation(true);
+        VoteUtil.setEnableCreateAndUpdate(false);
+        assertThrows(ApplicationException.class, () -> repository.save(VoteTestDate.getNew(), UserTestData.USER_ID, RestaurantTestData.RESTAURANT_ID));
     }
 
     @Test
@@ -70,25 +81,25 @@ class VoteRepositoryTest {
 
     @Test
     void getByDay() {
-        List<VoteTo> voteTo = repository.getByDay(LocalDate.of(2020,12,1));
+        List<VoteTo> voteTo = repository.getByDay(LocalDate.of(2020, 12, 1));
         VOTE_TO_MATCHER.assertMatch(voteTo, voteTo3, voteTo2, voteTo1);
     }
 
     @Test
     void getByDayAndUser() {
-        VoteTo voteTo = repository.getByDay(LocalDate.of(2020,12,1), UserTestData.USER_ID);
+        VoteTo voteTo = repository.getByDay(LocalDate.of(2020, 12, 1), UserTestData.USER_ID);
         VOTE_TO_MATCHER.assertMatch(voteTo, voteTo1);
     }
 
     @Test
     void getBetween() {
-        List<VoteTo> voteTo = repository.getBetween(LocalDate.of(2020,12,1), LocalDate.now());
-        VOTE_TO_MATCHER.assertMatch(voteTo,voteTo6, voteTo5, voteTo4, voteTo3, voteTo2, voteTo1);
+        List<VoteTo> voteTo = repository.getBetween(LocalDate.of(2020, 12, 1), LocalDate.now());
+        VOTE_TO_MATCHER.assertMatch(voteTo, voteTo6, voteTo5, voteTo4, voteTo3, voteTo2, voteTo1);
     }
 
     @Test
     void testGetBetween() {
-        List<VoteTo> voteTo = repository.getBetween(UserTestData.USER_ID, LocalDate.of(2020,12,1), LocalDate.now());
-        VOTE_TO_MATCHER.assertMatch(voteTo,voteTo4, voteTo1);
+        List<VoteTo> voteTo = repository.getBetween(UserTestData.USER_ID, LocalDate.of(2020, 12, 1), LocalDate.now());
+        VOTE_TO_MATCHER.assertMatch(voteTo, voteTo4, voteTo1);
     }
 }
