@@ -25,7 +25,7 @@ import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
 @RestController
 @RequestMapping(value = ProfileVoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileVoteRestController extends AbstractVoteController {
-    static final String REST_URL = "/rest/profile/vote";
+    static final String REST_URL = "/rest/profile/votes";
 
     @GetMapping
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthorizedUser authUser) {

@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = AdminVoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminVoteRestController extends AbstractVoteController {
-    static final String REST_URL = "/rest/admin/vote";
+    static final String REST_URL = "/rest/admin/votes";
 
     @GetMapping
     public List<VoteTo> getAll() {

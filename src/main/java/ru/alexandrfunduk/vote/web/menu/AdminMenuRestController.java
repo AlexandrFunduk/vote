@@ -17,7 +17,7 @@ import java.net.URI;
 @RestController
 @RequestMapping(value = AdminMenuRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminMenuRestController extends AbstractMenuRestController {
-    static final String REST_URL = "/rest/admin/menu";
+    static final String REST_URL = "/rest/admin/menus";
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
