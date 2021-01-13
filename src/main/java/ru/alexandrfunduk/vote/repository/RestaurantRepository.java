@@ -35,6 +35,6 @@ public class RestaurantRepository {
     }
 
     public Restaurant getByName(String name) {
-        return crudRepository.getRestaurantByName(name);
+        return crudRepository.getByName(name);
     }
 }

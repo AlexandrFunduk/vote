@@ -15,12 +15,6 @@ public class MenuRestController extends AbstractMenuRestController {
     static final String REST_URL = "/rest/menus";
 
     @Override
-    @GetMapping
-    public List<Menu> getAll() {
-        return super.getAll();
-    }
-
-    @Override
     @GetMapping("/{id}")
     public Menu get(@PathVariable int id) {
         return super.get(id);

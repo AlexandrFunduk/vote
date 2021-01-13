@@ -1,5 +1,8 @@
 package ru.alexandrfunduk.vote.web.vote;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.alexandrfunduk.vote.AuthorizedUser;
 import ru.alexandrfunduk.vote.model.Vote;
+import ru.alexandrfunduk.vote.repository.VoteRepository;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
 import ru.alexandrfunduk.vote.util.exception.ApplicationException;
@@ -24,8 +28,13 @@ import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
 
 @RestController
 @RequestMapping(value = ProfileVoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProfileVoteRestController extends AbstractVoteController {
+public class ProfileVoteRestController {
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
     static final String REST_URL = "/rest/profile/votes";
+
+    @Autowired
+    protected VoteRepository repository;
 
     @GetMapping
     public List<VoteTo> getAll(@AuthenticationPrincipal AuthorizedUser authUser) {

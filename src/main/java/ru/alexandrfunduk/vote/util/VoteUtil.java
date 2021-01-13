@@ -1,5 +1,8 @@
 package ru.alexandrfunduk.vote.util;
 
+import ru.alexandrfunduk.vote.model.Vote;
+import ru.alexandrfunduk.vote.to.VoteTo;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -15,27 +18,18 @@ public class VoteUtil {
         return dateTime.toLocalTime().isBefore(votingTime);
     }
 
-    public static void setVotingTime(LocalTime votingTime) {
-        VoteUtil.votingTime = votingTime;
-    }
-
     public static void setImitation(boolean imitation) {
         VoteUtil.imitation = imitation;
     }
 
-    public static LocalTime getVotingTime() {
-        return votingTime;
-    }
-
-    public static boolean isImitation() {
-        return imitation;
-    }
-
-    public static boolean isEnableCreateAndUpdate() {
-        return enableCreateAndUpdate;
-    }
-
     public static void setEnableCreateAndUpdate(boolean before) {
         VoteUtil.enableCreateAndUpdate = before;
+    }
+
+    public static VoteTo asTo(Vote vote) {
+        return new VoteTo(vote.id(), vote.getDate(), vote.getUser().id(), vote.getRestaurant().id());
+    }
+    public static VoteTo asTo(Vote vote, int userId) {
+        return new VoteTo(vote.id(), vote.getDate(), userId, vote.getRestaurant().id());
     }
 }

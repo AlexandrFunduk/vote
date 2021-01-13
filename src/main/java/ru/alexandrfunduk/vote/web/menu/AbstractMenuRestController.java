@@ -19,8 +19,7 @@ import ru.alexandrfunduk.vote.util.DateTimeUtil;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.alexandrfunduk.vote.util.ValidationUtil.assureIdConsistent;
-import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
+import static ru.alexandrfunduk.vote.util.ValidationUtil.*;
 
 public abstract class AbstractMenuRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -59,7 +58,8 @@ public abstract class AbstractMenuRestController {
     @Transactional
     public Menu create(MenuTo menuTo) {
         Assert.notNull(menuTo, "menu must not be null");
-        Menu menu = new Menu(null, menuTo.getDay(), null, menuTo.getDishPrise());
+        checkNew(menuTo);
+        Menu menu = new Menu(null, menuTo.getDay(), null, menuTo.getDishPrice());
         log.info("create {}", menu);
         return repository.save(menu, menuTo.getRestaurantId());
     }
@@ -72,7 +72,7 @@ public abstract class AbstractMenuRestController {
     @Transactional
     public Menu update(MenuTo menuTo, int id) throws BindException {
         Assert.notNull(menuTo, "menu must not be null");
-        Menu menu = new Menu(menuTo.getId(), menuTo.getDay(), null, menuTo.getDishPrise());
+        Menu menu = new Menu(menuTo.getId(), menuTo.getDay(), null, menuTo.getDishPrice());
         log.info("update {} with id={}", menuTo, id);
         assureIdConsistent(menu, id);
         return checkNotFoundWithId(repository.save(menu, menuTo.getRestaurantId()), id);

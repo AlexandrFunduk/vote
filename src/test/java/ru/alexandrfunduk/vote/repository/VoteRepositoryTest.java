@@ -43,7 +43,7 @@ class VoteRepositoryTest {
         Vote newVote = VoteTestDate.getNew();
         newVote.setId(newId);
 
-        VoteTo voteTo = new VoteTo(newId, newVote.getDate(), newVote.getUser().getId(), newVote.getRestaurant().getId());
+        VoteTo voteTo = VoteUtil.asTo(newVote);
         VOTE_TO_MATCHER.assertMatch(created, voteTo);
         VOTE_TO_MATCHER.assertMatch(repository.get(newId), voteTo);
     }

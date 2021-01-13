@@ -16,8 +16,7 @@ import ru.alexandrfunduk.vote.repository.RestaurantRepository;
 
 import java.util.List;
 
-import static ru.alexandrfunduk.vote.util.ValidationUtil.assureIdConsistent;
-import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
+import static ru.alexandrfunduk.vote.util.ValidationUtil.*;
 
 public abstract class AbstractRestaurantRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -50,6 +49,7 @@ public abstract class AbstractRestaurantRestController {
     public Restaurant create(Restaurant restaurant) {
         log.info("create {}", restaurant);
         Assert.notNull(restaurant, "restaurant must not be null");
+        checkNew(restaurant);
         return repository.save(restaurant);
     }
 

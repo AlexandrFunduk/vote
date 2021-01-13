@@ -14,17 +14,17 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     @Column(name = "date")
     @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
-    LocalDate date;
+    private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull(groups = View.Persist.class)
-    User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull(groups = View.Persist.class)
-    Restaurant restaurant;
+    private Restaurant restaurant;
 
     public Vote() {
     }

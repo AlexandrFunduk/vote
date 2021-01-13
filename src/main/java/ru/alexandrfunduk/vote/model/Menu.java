@@ -22,31 +22,31 @@ public class Menu extends AbstractBaseEntity {
     @DateTimeFormat(pattern = DateTimeUtil.DATE_PATTERN)
     private LocalDate day;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "dish_prise")
+    @CollectionTable(name = "dish_price")
     @MapKeyColumn(name = "dish")
-    @Column(name = "prise")
+    @Column(name = "price")
     @BatchSize(size = 200)
     @NotNull
-    private Map<String, Integer> dishPrise;
+    private Map<String, Integer> dishPrice;
 
-    public Menu(LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrise) {
+    public Menu(LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrice) {
         this.day = day;
         this.restaurant = restaurant;
-        this.dishPrise = dishPrise;
+        this.dishPrice = dishPrice;
     }
 
-    public Menu(Integer id, LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrise) {
+    public Menu(Integer id, LocalDate day, Restaurant restaurant, Map<String, Integer> dishPrice) {
         super(id);
         this.day = day;
         this.restaurant = restaurant;
-        this.dishPrise = dishPrise;
+        this.dishPrice = dishPrice;
     }
 
     public Menu() {
@@ -69,12 +69,12 @@ public class Menu extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public Map<String, Integer> getDishPrise() {
-        return dishPrise;
+    public Map<String, Integer> getDishPrice() {
+        return dishPrice;
     }
 
-    public void setDishPrise(Map<String, Integer> dish_prise) {
-        this.dishPrise = dish_prise;
+    public void setDishPrice(Map<String, Integer> dish_price) {
+        this.dishPrice = dish_price;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Menu extends AbstractBaseEntity {
                 "id=" + id +
                 ", day=" + day +
                 ", restaurant=" + restaurant +
-                ", dishPrise=" + dishPrise +
+                ", dishPrice=" + dishPrice +
                 '}';
     }
 }

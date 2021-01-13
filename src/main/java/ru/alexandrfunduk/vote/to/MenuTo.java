@@ -18,16 +18,16 @@ public class MenuTo extends BaseTo implements HasId {
     private Integer restaurantId;
 
     @NotNull
-    private Map<String, Integer> dishPrise;
+    private Map<String, Integer> dishPrice;
 
     public MenuTo() {
     }
 
-    public MenuTo(Integer id, @NotBlank LocalDate day, @NotNull Integer restaurantId, @NotNull Map<String, Integer> dishPrise) {
+    public MenuTo(Integer id, @NotBlank LocalDate day, @NotNull Integer restaurantId, @NotNull Map<String, Integer> dishPrice) {
         super(id);
         this.day = day;
         this.restaurantId = restaurantId;
-        this.dishPrise = dishPrise;
+        this.dishPrice = dishPrice;
     }
 
     public LocalDate getDay() {
@@ -46,12 +46,12 @@ public class MenuTo extends BaseTo implements HasId {
         this.restaurantId = restaurantId;
     }
 
-    public Map<String, Integer> getDishPrise() {
-        return dishPrise;
+    public Map<String, Integer> getDishPrice() {
+        return dishPrice;
     }
 
-    public void setDishPrise(Map<String, Integer> dishPrise) {
-        this.dishPrise = dishPrise;
+    public void setDishPrice(Map<String, Integer> dishPrice) {
+        this.dishPrice = dishPrice;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MenuTo extends BaseTo implements HasId {
                 "id=" + id +
                 ", day=" + day +
                 ", restaurantId=" + restaurantId +
-                ", dishPrise=" + dishPrise +
+                ", dishPrice=" + dishPrice +
                 '}';
     }
 }

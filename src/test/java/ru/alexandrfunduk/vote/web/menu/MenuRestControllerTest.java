@@ -22,16 +22,6 @@ class MenuRestControllerTest extends AbstractControllerTest {
     private MenuRepository repository;
 
     @Test
-    void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(MenuRestController.REST_URL)
-                .with(userHttpBasic(user1)))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MENU_MATCHER.contentJson(menus));
-    }
-
-    @Test
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + MENU_ID)
                 .with(userHttpBasic(user1)))

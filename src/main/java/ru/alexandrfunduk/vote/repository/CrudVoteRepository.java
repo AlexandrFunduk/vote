@@ -35,5 +35,5 @@ public interface CrudVoteRepository extends JpaRepository<Vote, Integer> {
 
     @Modifying
     @Query("SELECT vote FROM Vote vote WHERE vote.date=:date and vote.user.id=:user_id")
-    List<Vote> getVoteByDate(@Param("date") LocalDate date, @Param("user_id") int userId);
+    List<Vote> getByDate(@Param("date") LocalDate date, @Param("user_id") int userId);
 }

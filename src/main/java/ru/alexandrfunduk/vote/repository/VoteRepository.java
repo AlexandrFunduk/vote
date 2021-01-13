@@ -45,9 +45,9 @@ public class VoteRepository {
                 return new VoteTo();
             }
             Vote dbVote = crudRepository.save(vote);
-            return new VoteTo(dbVote.getId(), dbVote.getDate(), userId, dbVote.getRestaurant().id());
+            return VoteUtil.asTo(dbVote, userId);
         }
-        throw new ApplicationException("exception.vote.after11", ErrorType.VALIDATION_ERROR);
+        throw new ApplicationException("exception.vote.afterVotingTime", ErrorType.VALIDATION_ERROR);
     }
 
     public boolean delete(int id, int userId) {
@@ -56,51 +56,51 @@ public class VoteRepository {
 
     public VoteTo get(int id) {
         return checkNotFoundWithId(crudRepository.findById(id)
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId()))
+                .map(VoteUtil::asTo)
                 .orElse(null), id);
     }
 
     public VoteTo get(int id, int userId) {
         return checkNotFoundWithId(crudRepository.findById(id)
                 .filter(meal -> meal.getUser().getId() == userId)
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), userId, vote.getRestaurant().getId()))
+                .map(vote -> VoteUtil.asTo(vote, userId))
                 .orElse(null), id);
     }
 
     public List<VoteTo> getAll() {
         return crudRepository.findAll(Sort.by("date").descending().and(Sort.by("id").descending())).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId()))
+                .map(VoteUtil::asTo)
                 .collect(Collectors.toList());
     }
 
     public List<VoteTo> getAll(int userId) {
         return checkNotFound(crudRepository.getAll(userId).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), userId, vote.getRestaurant().getId()))
+                .map(vote -> VoteUtil.asTo(vote, userId))
                 .collect(Collectors.toList()), "Not found entity");
     }
 
     public VoteTo getByDay(LocalDate date, int userId) {
-        return checkNotFound(crudRepository.getVoteByDate(date, userId).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), userId, vote.getRestaurant().getId()))
+        return checkNotFound(crudRepository.getByDate(date, userId).stream()
+                .map(vote -> VoteUtil.asTo(vote, userId))
                 .findFirst()
                 .orElse(null), "Not found entity");
     }
 
     public List<VoteTo> getByDay(LocalDate date) {
         return crudRepository.getByDate(date).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId()))
+                .map(VoteUtil::asTo)
                 .collect(Collectors.toList());
     }
 
     public List<VoteTo> getBetween(int userId, LocalDate startDate, LocalDate endDate) {
         return crudRepository.getBetweenByUser(startDate, endDate, userId).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), userId, vote.getRestaurant().getId()))
+                .map(vote -> VoteUtil.asTo(vote, userId))
                 .collect(Collectors.toList());
     }
 
     public List<VoteTo> getBetween(LocalDate startDate, LocalDate endDate) {
         return crudRepository.getBetween(startDate, endDate).stream()
-                .map(vote -> new VoteTo(vote.getId(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId()))
+                .map(VoteUtil::asTo)
                 .collect(Collectors.toList());
     }
 }

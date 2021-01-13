@@ -51,7 +51,7 @@ public class MenuRepository {
                     @CacheEvict(value = "menusDay", allEntries = true)
             }
     )
-    @CacheEvict(value = "menus", allEntries = true)
+
     public boolean delete(int id) {
         return crudRepository.delete(id) != 0;
     }
@@ -66,16 +66,16 @@ public class MenuRepository {
     }
 
     public List<Menu> getByRestaurant(int restaurant_id) {
-        return crudRepository.getMenusByRestaurant(restaurant_id);
+        return crudRepository.getByRestaurant(restaurant_id);
     }
 
     @Cacheable("menusDay")
     public List<Menu> getByDay(LocalDate date) {
-        return crudRepository.getMenusByDay(date);
+        return crudRepository.getByDay(date);
     }
 
     public Menu getByDayAndRestaurant(int restaurantId, LocalDate date) {
-        List<Menu> menus = crudRepository.getDayMenuByRestaurant(restaurantId, date);
+        List<Menu> menus = crudRepository.getByDayAndRestaurant(restaurantId, date);
         return menus.isEmpty() ? null : menus.get(0);
     }
 

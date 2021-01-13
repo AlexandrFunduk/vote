@@ -1,15 +1,15 @@
 DELETE
-FROM USER_ROLES;
+FROM user_roles;
 DELETE
-FROM DISH_PRISE;
+FROM dish_price;
 DELETE
-FROM MENU;
+FROM menu;
 DELETE
-FROM VOTE;
+FROM vote;
 DELETE
-FROM RESTAURANT;
+FROM restaurant;
 DELETE
-FROM USERS;
+FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -25,12 +25,12 @@ VALUES ('USER', 100000),
        ('ADMIN', 100003),
        ('USER', 100003);
 
-INSERT INTO restaurant (NAME, REGISTERED)
+INSERT INTO restaurant (name, registered)
 VALUES ('restaurant1', '2020-12-01'),
        ('restaurant2', '2020-12-01'),
        ('restaurant3', '2020-12-01');
 
-INSERT INTO menu (DAY, RESTAURANT_ID)
+INSERT INTO menu (day, restaurant_id)
 VALUES ('2020-12-01', 100004),
        ('2020-12-01', 100005),
        ('2020-12-01', 100006),
@@ -39,7 +39,7 @@ VALUES ('2020-12-01', 100004),
        ('2020-12-02', 100006),
        (curdate(), 100004);
 
-INSERT INTO dish_prise(menu_id, dish, prise)
+INSERT INTO dish_price(menu_id, dish, price)
 VALUES (100007, 'borsch', 10000),
        (100007, 'pie', 20000),
        (100007, 'tea', 5000),
@@ -62,7 +62,7 @@ VALUES (100007, 'borsch', 10000),
        (100013, 'salad2', 200000),
        (100013, 'juice2', 1000);
 
-INSERT INTO VOTE (DATE, RESTAURANT_ID, USER_ID)
+INSERT INTO vote (date, restaurant_id, user_id)
 VALUES ('2020-12-01', 100004, 100000),
        ('2020-12-01', 100005, 100001),
        ('2020-12-01', 100006, 100002),
