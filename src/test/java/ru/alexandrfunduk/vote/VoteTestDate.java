@@ -14,14 +14,6 @@ public class VoteTestDate {
     public static final TestMatcher<VoteTo> VOTE_TO_MATCHER = TestMatcher.usingIgnoringFieldsComparator(VoteTo.class);
     public static final int VOTE_ID = START_SEQ + 14;
 
-    /*public static final Vote vote1 = new Vote(VOTE_ID, LocalDate.of(2020, 12, 1), UserTestData.user1, RestaurantTestData.restaurant1);
-    public static final Vote vote2 = new Vote(VOTE_ID + 1, LocalDate.of(2020, 12, 1), UserTestData.user2, RestaurantTestData.restaurant2);
-    public static final Vote vote3 = new Vote(VOTE_ID + 2, LocalDate.of(2020, 12, 1), UserTestData.user3, RestaurantTestData.restaurant3);
-    public static final Vote vote4 = new Vote(VOTE_ID + 3, LocalDate.of(2020, 12, 2), UserTestData.user1, RestaurantTestData.restaurant1);
-    public static final Vote vote5 = new Vote(VOTE_ID + 4, LocalDate.of(2020, 12, 2), UserTestData.user2, RestaurantTestData.restaurant2);
-    public static final Vote vote6 = new Vote(VOTE_ID + 5, LocalDate.of(2020, 12, 2), UserTestData.user3, RestaurantTestData.restaurant3);
-    public static final Vote vote8 = new Vote(VOTE_ID + 6, LocalDate.now(), UserTestData.user2, RestaurantTestData.restaurant1);
-    public static final Vote vote9 = new Vote(VOTE_ID + 7, LocalDate.now(), UserTestData.user3, RestaurantTestData.restaurant1);*/
     public static final VoteTo voteTo1 = new VoteTo(VOTE_ID, LocalDate.of(2020, 12, 1), USER_ID, RESTAURANT_ID);
     public static final VoteTo voteTo2 = new VoteTo(VOTE_ID + 1, LocalDate.of(2020, 12, 1), USER_ID+1, RESTAURANT_ID+1);
     public static final VoteTo voteTo3 = new VoteTo(VOTE_ID + 2, LocalDate.of(2020, 12, 1), USER_ID+2, RESTAURANT_ID+2);

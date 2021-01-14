@@ -77,7 +77,6 @@ public class MenuRepository {
         return menus.isEmpty() ? null : menus.get(0);
     }
 
-
     public List<Menu> getBetween(LocalDate startDate, LocalDate endDate) {
         return crudRepository.getBetween(startDate, endDate);
     }

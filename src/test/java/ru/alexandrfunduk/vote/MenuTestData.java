@@ -41,5 +41,4 @@ public class MenuTestData {
     public static MenuTo getUpdatedTo() {
         return new MenuTo(MENU_ID, LocalDate.of(2020, 12, 3), RestaurantTestData.restaurant2.getId(), Map.of("D", 30, "E", 40));
     }
-
 }

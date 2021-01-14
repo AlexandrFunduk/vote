@@ -103,7 +103,6 @@ class UserServiceTest {
         assertTrue(service.get(USER_ID).isEnabled());
     }
 
-
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778
     protected <T extends Throwable> void validateRootCause(Runnable runnable, Class<T> rootExceptionClass) {
         assertThrows(rootExceptionClass, () -> {
