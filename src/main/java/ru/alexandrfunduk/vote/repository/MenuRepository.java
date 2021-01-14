@@ -7,7 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alexandrfunduk.vote.model.Menu;
-import ru.alexandrfunduk.vote.model.Restaurant;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,11 +36,7 @@ public class MenuRepository {
         if (!menu.isNew() && get(menu.getId()) == null) {
             return null;
         }
-        Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
-        menu.setRestaurant(restaurant);
-        if (restaurant == null) {
-            return menu;
-        }
+        menu.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
         return crudRepository.save(menu);
     }
 

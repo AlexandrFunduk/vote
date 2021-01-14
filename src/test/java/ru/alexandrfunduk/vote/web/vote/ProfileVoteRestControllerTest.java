@@ -22,7 +22,7 @@ import static ru.alexandrfunduk.vote.RestaurantTestData.RESTAURANT_ID;
 import static ru.alexandrfunduk.vote.TestUtil.*;
 import static ru.alexandrfunduk.vote.UserTestData.*;
 import static ru.alexandrfunduk.vote.VoteTestDate.*;
-import static ru.alexandrfunduk.vote.util.exception.ErrorType.DATA_ERROR;
+import static ru.alexandrfunduk.vote.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.alexandrfunduk.vote.util.exception.ErrorType.VALIDATION_ERROR;
 
 class ProfileVoteRestControllerTest extends AbstractControllerTest {
@@ -86,8 +86,8 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(NOT_FOUND))
                 .with(userHttpBasic(user1)))
                 .andDo(print())
-                .andExpect(status().isConflict())
-                .andExpect(errorType(DATA_ERROR));
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(errorType(DATA_NOT_FOUND));
     }
 
     @Test
@@ -117,7 +117,6 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(RESTAURANT_ID+1)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
         VOTE_TO_MATCHER.assertMatch(repository.get(7+VOTE_ID), voteToUpdated);
     }
 

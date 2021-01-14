@@ -59,9 +59,6 @@ public class ProfileVoteRestController {
         int userId = authUser.getId();
         VoteTo created = repository.save(new Vote(), userId, restaurantId);
         Assert.notNull(created, "vote can not be created");
-        if (created.getId() == null) {
-            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
-        }
         log.info("create {} for user {}", created, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
@@ -85,10 +82,7 @@ public class ProfileVoteRestController {
         log.info("update {} for user {}", vote, userId);
         LocalDateTime dateTime = LocalDateTime.now();
         if (VoteUtil.enableCreateAndUpdate(dateTime)) {
-            VoteTo updated = checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
-            if (updated.getId() == null) {
-                throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
-            }
+            checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
         } else {
             throw new ApplicationException("exception.vote.afterVotingTime", ErrorType.VALIDATION_ERROR);
         }

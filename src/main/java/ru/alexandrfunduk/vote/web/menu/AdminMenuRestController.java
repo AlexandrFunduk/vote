@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.alexandrfunduk.vote.model.Menu;
 import ru.alexandrfunduk.vote.to.MenuTo;
-import ru.alexandrfunduk.vote.util.exception.ApplicationException;
-import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -23,10 +21,7 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateWithValidation(@Valid @RequestBody MenuTo menuTo, @PathVariable int id) throws BindException {
         validateBeforeUpdate(menuTo, id);
-        Menu updated = super.update(menuTo, id);
-        if (updated.getId() == null) {
-            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
-        }
+        super.update(menuTo, id);
     }
 
     @Override
@@ -40,9 +35,6 @@ public class AdminMenuRestController extends AbstractMenuRestController {
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody MenuTo menuTo) throws BindException {
         validateBefore(menuTo);
         Menu created = super.create(menuTo);
-        if (created.getRestaurant() == null) {
-            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
-        }
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

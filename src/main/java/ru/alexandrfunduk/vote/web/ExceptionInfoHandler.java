@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import ru.alexandrfunduk.vote.util.ValidationUtil;
 import ru.alexandrfunduk.vote.util.exception.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -43,8 +44,8 @@ public class ExceptionInfoHandler {
         this.messageSourceAccessor = messageSourceAccessor;
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, NotFoundException e) {
+    @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
+    public ResponseEntity<ErrorInfo> NotFoundException(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, DATA_NOT_FOUND);
     }
 

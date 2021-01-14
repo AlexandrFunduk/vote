@@ -3,7 +3,6 @@ package ru.alexandrfunduk.vote.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.alexandrfunduk.vote.model.Restaurant;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.VoteUtil;
@@ -34,11 +33,7 @@ public class VoteRepository {
         }
         vote.setDate(LocalDate.now());
         vote.setUser(crudUserRepository.getOne(userId));
-        Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
-        vote.setRestaurant(restaurant);
-        if (restaurant == null) {
-            return new VoteTo();
-        }
+        vote.setRestaurant(crudRestaurantRepository.getOne(restaurantId));
         Vote dbVote = crudRepository.save(vote);
         return VoteUtil.asTo(dbVote, userId);
     }
