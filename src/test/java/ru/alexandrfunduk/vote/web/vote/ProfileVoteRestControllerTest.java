@@ -22,7 +22,6 @@ import static ru.alexandrfunduk.vote.RestaurantTestData.RESTAURANT_ID;
 import static ru.alexandrfunduk.vote.TestUtil.*;
 import static ru.alexandrfunduk.vote.UserTestData.*;
 import static ru.alexandrfunduk.vote.VoteTestDate.*;
-import static ru.alexandrfunduk.vote.util.exception.ErrorType.DATA_NOT_FOUND;
 import static ru.alexandrfunduk.vote.util.exception.ErrorType.VALIDATION_ERROR;
 
 class ProfileVoteRestControllerTest extends AbstractControllerTest {
@@ -78,19 +77,6 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createInvalidBeforeVotingTime() throws Exception {
-        VoteUtil.setImitation(true);
-        VoteUtil.setEnableCreateAndUpdate(true);
-        ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(NOT_FOUND))
-                .with(userHttpBasic(user1)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(DATA_NOT_FOUND));
-    }
-
-    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + VOTE_ID)
                 .with(userHttpBasic(user1)))
@@ -108,26 +94,26 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void updateBeforeVotingTime()  throws Exception {
+    void updateBeforeVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(true);
-        perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))
+        perform(MockMvcRequestBuilders.put(REST_URL + (7 + VOTE_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user3))
-                .content(JsonUtil.writeValue(RESTAURANT_ID+1)))
+                .content(JsonUtil.writeValue(RESTAURANT_ID + 1)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        VOTE_TO_MATCHER.assertMatch(repository.get(7+VOTE_ID), voteToUpdated);
+        VOTE_TO_MATCHER.assertMatch(repository.get(7 + VOTE_ID), voteToUpdated);
     }
 
     @Test
-    void updateAfterVotingTime()  throws Exception {
+    void updateAfterVotingTime() throws Exception {
         VoteUtil.setImitation(true);
         VoteUtil.setEnableCreateAndUpdate(false);
-        perform(MockMvcRequestBuilders.put(REST_URL + (7+VOTE_ID))
+        perform(MockMvcRequestBuilders.put(REST_URL + (7 + VOTE_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user3))
-                .content(JsonUtil.writeValue(RESTAURANT_ID+1)))
+                .content(JsonUtil.writeValue(RESTAURANT_ID + 1)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(errorType(VALIDATION_ERROR));

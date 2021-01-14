@@ -27,9 +27,10 @@ public class VoteUtil {
     }
 
     public static VoteTo asTo(Vote vote) {
-        return new VoteTo(vote.id(), vote.getDate(), vote.getUser().id(), vote.getRestaurant().id());
+        return new VoteTo(vote.id(), vote.getDate(), vote.getUser().getId(), vote.getRestaurant().getId());
     }
+
     public static VoteTo asTo(Vote vote, int userId) {
-        return new VoteTo(vote.id(), vote.getDate(), userId, vote.getRestaurant().id());
+        return new VoteTo(vote.id(), vote.getDate(), userId, vote.getRestaurant().getId());
     }
 }
