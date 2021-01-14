@@ -82,7 +82,7 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
                 .with(userHttpBasic(user1)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertThrows(NotFoundException.class, () -> repository.get(USER_ID));
+        assertThrows(NotFoundException.class, () -> repository.get(VOTE_ID));
     }
 
     @Test

@@ -46,7 +46,6 @@ public class MenuRepository {
                     @CacheEvict(value = "menusDay", allEntries = true)
             }
     )
-
     public boolean delete(int id) {
         return crudRepository.delete(id) != 0;
     }
@@ -65,6 +64,10 @@ public class MenuRepository {
     }
 
     @Cacheable("menusDay")
+    public List<Menu> getToDay() {
+        return crudRepository.getByDay(LocalDate.now());
+    }
+
     public List<Menu> getByDay(LocalDate date) {
         return crudRepository.getByDay(date);
     }

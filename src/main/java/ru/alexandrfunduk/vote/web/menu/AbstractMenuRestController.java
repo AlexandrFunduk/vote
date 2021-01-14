@@ -45,7 +45,7 @@ public abstract class AbstractMenuRestController {
     }
 
     public List<Menu> getByToday() {
-        return repository.getByDay(LocalDate.now());
+        return repository.getToDay();
     }
 
     public List<Menu> getFiltered(@Nullable LocalDate startDate, @Nullable LocalDate endDate, @Nullable Integer restaurantId) {
