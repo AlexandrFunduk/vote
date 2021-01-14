@@ -7,11 +7,8 @@ import ru.alexandrfunduk.vote.model.Restaurant;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.VoteUtil;
-import ru.alexandrfunduk.vote.util.exception.ApplicationException;
-import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,22 +29,18 @@ public class VoteRepository {
 
     @Transactional
     public VoteTo save(Vote vote, int userId, int restaurantId) {
-        LocalDateTime dateTime = LocalDateTime.now();
         if (!vote.isNew() && (get(vote.getId(), userId) == null)) {
             return null;
         }
-        if (VoteUtil.enableCreateAndUpdate(dateTime)) {
-            vote.setDate(dateTime.toLocalDate());
-            vote.setUser(crudUserRepository.getOne(userId));
-            Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
-            vote.setRestaurant(restaurant);
-            if (restaurant == null) {
-                return new VoteTo();
-            }
-            Vote dbVote = crudRepository.save(vote);
-            return VoteUtil.asTo(dbVote, userId);
+        vote.setDate(LocalDate.now());
+        vote.setUser(crudUserRepository.getOne(userId));
+        Restaurant restaurant = crudRestaurantRepository.findById(restaurantId).orElse(null);
+        vote.setRestaurant(restaurant);
+        if (restaurant == null) {
+            return new VoteTo();
         }
-        throw new ApplicationException("exception.vote.afterVotingTime", ErrorType.VALIDATION_ERROR);
+        Vote dbVote = crudRepository.save(vote);
+        return VoteUtil.asTo(dbVote, userId);
     }
 
     public boolean delete(int id, int userId) {

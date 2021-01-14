@@ -17,11 +17,13 @@ import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.repository.VoteRepository;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.DateTimeUtil;
+import ru.alexandrfunduk.vote.util.VoteUtil;
 import ru.alexandrfunduk.vote.util.exception.ApplicationException;
 import ru.alexandrfunduk.vote.util.exception.ErrorType;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.alexandrfunduk.vote.util.ValidationUtil.checkNotFoundWithId;
@@ -81,9 +83,14 @@ public class ProfileVoteRestController {
         vote.setId(id);
         int userId = authUser.getId();
         log.info("update {} for user {}", vote, userId);
-        VoteTo updated = checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
-        if (updated.getId() == null) {
-            throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
+        LocalDateTime dateTime = LocalDateTime.now();
+        if (VoteUtil.enableCreateAndUpdate(dateTime)) {
+            VoteTo updated = checkNotFoundWithId(repository.save(vote, userId, restaurantId), id);
+            if (updated.getId() == null) {
+                throw new ApplicationException("exception.restaurantNotFound", ErrorType.DATA_ERROR);
+            }
+        } else {
+            throw new ApplicationException("exception.vote.afterVotingTime", ErrorType.VALIDATION_ERROR);
         }
     }
 

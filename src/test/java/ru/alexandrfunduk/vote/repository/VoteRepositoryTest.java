@@ -13,7 +13,6 @@ import ru.alexandrfunduk.vote.VoteTestDate;
 import ru.alexandrfunduk.vote.model.Vote;
 import ru.alexandrfunduk.vote.to.VoteTo;
 import ru.alexandrfunduk.vote.util.VoteUtil;
-import ru.alexandrfunduk.vote.util.exception.ApplicationException;
 import ru.alexandrfunduk.vote.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -46,13 +45,6 @@ class VoteRepositoryTest {
         VoteTo voteTo = VoteUtil.asTo(newVote);
         VOTE_TO_MATCHER.assertMatch(created, voteTo);
         VOTE_TO_MATCHER.assertMatch(repository.get(newId), voteTo);
-    }
-
-    @Test
-    void saveAfterVotingTime() {
-        VoteUtil.setImitation(true);
-        VoteUtil.setEnableCreateAndUpdate(false);
-        assertThrows(ApplicationException.class, () -> repository.save(VoteTestDate.getNew(), UserTestData.USER_ID, RestaurantTestData.RESTAURANT_ID));
     }
 
     @Test

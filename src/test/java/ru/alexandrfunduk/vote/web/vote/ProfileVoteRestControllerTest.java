@@ -91,32 +91,6 @@ class ProfileVoteRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void createAfterVotingTime() throws Exception {
-        VoteUtil.setImitation(true);
-        VoteUtil.setEnableCreateAndUpdate(false);
-        VoteTo newVoteTo = getNewTo();
-        ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(RESTAURANT_ID))
-                .with(userHttpBasic(user1)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR));
-    }
-
-    @Test
-    void createInvalidAfterVotingTime() throws Exception {
-        VoteUtil.setImitation(true);
-        VoteUtil.setEnableCreateAndUpdate(false);
-        ResultActions actions = perform(MockMvcRequestBuilders.post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(NOT_FOUND))
-                .with(userHttpBasic(user1)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(errorType(VALIDATION_ERROR));
-    }
-    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + VOTE_ID)
                 .with(userHttpBasic(user1)))
