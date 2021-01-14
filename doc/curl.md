@@ -55,9 +55,6 @@
 #### delete Menu 100007
 `curl -s -X DELETE http://localhost:8080/vote/rest/admin/menus/100007 --user admin@gmail.com:admin`
 
-#### get all Menus
-`curl -s http://localhost:8080/vote/rest/menus --user user@yandex.ru:password`
-
 #### get Menus 100007
 `curl -s http://localhost:8080/vote/rest/menus/100007 --user user@yandex.ru:password`
 
@@ -66,15 +63,6 @@
 
 #### filter Menus
 `curl -s 'http://localhost:8080/vote/rest/menus/filter?restaurantId=100004&startDate=2020-12-01&endDate=2020-12-02' --user user@yandex.ru:password`
-
-#### get all Vote
-`curl -s http://localhost:8080/vote/rest/admin/votes --user admin@gmail.com:admin`
-
-#### get today Vote
-`curl -s http://localhost:8080/vote/rest/admin/votes/today --user admin@gmail.com:admin`
-
-#### filter Vote
-`curl -s 'http://localhost:8080/vote/rest/admin/votes/filter?startDate=2020-12-02&endDate=2020-12-04' --user admin@gmail.com:admin`
 
 #### add Vote
 `curl -s -i -X POST --data-raw '100004' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/vote/rest/profile/votes --user user@yandex.ru:password`
